@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumPDF Pro - Next-Gen AI Document Toolkit</title>
+    
+    <!-- Google Fonts: Orbitron & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Cybernetic Anti-Gravity Background Structure -->
+    <div class="cyber-bg-container">
+        <div class="cyber-grid"></div>
+        <canvas id="particle-canvas"></canvas>
+        <div class="ambient-glow-orb-1"></div>
+        <div class="ambient-glow-orb-2"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark cyber-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'core_landing' %}">
+                <i class="fa-solid fa-cube text-cyan me-2 fa-spin-pulse btn-icon" style="--fa-animation-duration: 4s; color: var(--neon-cyan); filter: drop-shadow(0 0 8px var(--neon-cyan));"></i>
+                <span class="gradient-text-cyan-purple font-monospace">QUANTUM</span>
+                <span class="text-white font-monospace">PDF</span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#cyberNav" aria-controls="cyberNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="cyberNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core_landing' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core_landing' %}#tools">Tools</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core_landing' %}#pricing">Pricing</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'converter:dashboard' %}">
+                                <i class="fa-solid fa-gauge-high me-1"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'converter:terminal' %}">
+                                <i class="fa-solid fa-terminal me-1"></i> Convert Terminal
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:profile' %}">
+                                <i class="fa-solid fa-circle-user me-1"></i> Profile
+                            </a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-cyber btn-cyber-outline btn-sm px-4 py-2" href="{% url 'accounts:logout' %}">
+                                <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:login' %}">
+                                <i class="fa-solid fa-right-to-bracket me-1"></i> Sign In
+                            </a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-cyber btn-cyber-cyan btn-sm text-dark px-4 py-2 pulse-neon-blue" href="{% url 'accounts:signup' %}">
+                                <i class="fa-solid fa-user-plus me-1"></i> Join Free
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="container my-5" style="z-index: 5; position: relative;">
+        <!-- Django Flash Messages -->
+        {% if messages %}
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-10">
+                    {% for msg in messages %}
+                        <div class="alert alert-cyber alert-cyber-{% if msg.tags == 'error' %}danger{% elif msg.tags == 'success' %}success{% else %}warning{% endif %} alert-dismissible fade show" role="alert">
+                            <i class="fa-solid {% if msg.tags == 'error' %}fa-triangle-exclamation{% elif msg.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %} me-2"></i>
+                            {{ msg }}
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Content Block -->
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 mt-auto border-top border-secondary" style="background: rgba(5,5,15,0.4); backdrop-filter: blur(10px);">
+        <div class="container text-muted">
+            <p class="mb-0 font-monospace" style="font-size: 0.85rem;">
+                &copy; 2026 QuantumPDF Space System. Powered by AI. Operating with zero gravity.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Particles.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- GSAP Animation Library CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Custom Main JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    <script>
+        // Set up interactive particles background if element exists
+        if (typeof particlesJS !== 'undefined') {
+            particlesJS('particle-canvas', {
+                "particles": {
+                    "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": "#00E5FF" },
+                    "shape": { "type": "circle" },
+                    "opacity": { "value": 0.25, "random": true },
+                    "size": { "value": 2.5, "random": true },
+                    "line_linked": { "enable": true, "distance": 150, "color": "#8B5CF6", "opacity": 0.15, "width": 1 },
+                    "move": { "enable": true, "speed": 1.2, "direction": "none", "random": true, "straight": false, "out_mode": "out" }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } },
+                    "modes": { "grab": { "distance": 180, "line_linked": { "opacity": 0.35 } } }
+                }
+            });
+        }
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Left Column: Profile Card & API Key -->
+    <div class="col-lg-6">
+        <div class="glass-panel p-4 position-relative mb-4" style="border-radius: 16px;">
+            <div class="position-absolute" style="top: -2px; left: -2px; width: 20px; height: 20px; border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); border-radius: 16px 0 0 0; pointer-events: none;"></div>
+            
+            <h5 class="text-white font-monospace text-uppercase mb-4"><i class="fa-solid fa-circle-user text-cyan me-2"></i> Grid Identity details</h5>
+            
+            <div class="d-flex align-items-center mb-4">
+                <div class="stats-orb me-3" style="width: 60px; height: 60px; font-size: 1.5rem; border-color: var(--neon-cyan);">
+                    <i class="fa-solid fa-user-astronaut"></i>
+                </div>
+                <div>
+                    <h5 class="text-white font-monospace mb-1">{{ user.username }}</h5>
+                    <p class="text-muted small mb-0">{{ user.email }}</p>
+                </div>
+            </div>
+
+            <hr class="border-secondary border-opacity-25 my-4">
+
+            <!-- API Key Generation -->
+            <h6 class="text-white font-monospace text-uppercase mb-3"><i class="fa-solid fa-key text-purple me-2"></i> API Access Token</h6>
+            {% if profile.api_key %}
+                <div class="input-group mb-3 font-monospace">
+                    <input type="text" id="api-key-input" class="form-control bg-transparent text-white border-secondary border-opacity-25 small" value="{{ profile.api_key }}" readonly>
+                    <button class="btn btn-cyber btn-cyber-cyan text-dark" onclick="copyApiKey()"><i class="fa-solid fa-copy"></i></button>
+                </div>
+                <p class="text-muted small font-monospace">Developers can authenticate using `X-API-KEY: {{ profile.api_key|slice:":10" }}...` headers.</p>
+            {% else %}
+                <p class="text-muted small font-monospace mb-3">No developer access key mapped to this grid identity.</p>
+            {% endif %}
+
+            <form method="POST" action="{% url 'accounts:profile' %}">
+                {% csrf_token %}
+                <button type="submit" name="generate_key" value="1" class="btn btn-cyber btn-cyber-outline btn-sm font-monospace">
+                    <i class="fa-solid fa-arrows-rotate me-1"></i> Generate API Key
+                </button>
+            </form>
+        </div>
+        
+        <!-- Social accounts linkages mock -->
+        <div class="glass-panel p-4" style="border-radius: 16px;">
+            <h5 class="text-white font-monospace text-uppercase mb-3"><i class="fa-solid fa-link text-purple me-2"></i> Federated Identity Links</h5>
+            <div class="d-grid gap-3 font-monospace small">
+                <div class="d-flex justify-content-between align-items-center p-3 border border-secondary border-opacity-10 rounded bg-dark bg-opacity-25">
+                    <span class="text-white"><i class="fa-brands fa-google text-danger me-2"></i> Google Portal Link</span>
+                    <span class="badge-cyber badge-cyber-success">LINKED</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center p-3 border border-secondary border-opacity-10 rounded bg-dark bg-opacity-25">
+                    <span class="text-white"><i class="fa-brands fa-github text-light me-2"></i> GitHub Portal Link</span>
+                    <span class="badge-cyber badge-cyber-failed">UNLINKED</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Subscriptions Upgrader -->
+    <div class="col-lg-6">
+        <div class="glass-panel p-4 h-100 position-relative" style="border-radius: 16px; border-color: var(--neon-purple); box-shadow: 0 0 25px rgba(139, 92, 246, 0.1);">
+            <div class="position-absolute" style="top: -2px; right: -2px; width: 20px; height: 20px; border-top: 2px solid var(--neon-purple); border-right: 2px solid var(--neon-purple); border-radius: 0 16px 0 0; pointer-events: none;"></div>
+            
+            <h5 class="text-white font-monospace text-uppercase mb-4"><i class="fa-solid fa-credit-card text-purple me-2"></i> Subscription Upgrade Terminal</h5>
+            
+            <div class="p-3 border border-secondary border-opacity-25 rounded bg-dark bg-opacity-25 mb-4 text-center font-monospace">
+                <span class="text-muted small">ACTIVE METRICS PLAN LEVEL</span>
+                <h3 class="text-white mt-1 mb-0">{{ profile.plan_tier }}</h3>
+                <span class="text-cyan small d-block mt-1">Quota Capacity: {{ friendly_limit }} max storage</span>
+            </div>
+
+            <p class="text-muted small font-monospace mb-4">ENGAGE SUBSCRIPTION GATEWAYS TO ENHANCE LOCAL STORAGE SLOTS AND OPERATION BANDWIDTH</p>
+
+            <form method="POST" action="{% url 'accounts:profile' %}" class="font-monospace">
+                {% csrf_token %}
+                <input type="hidden" name="change_plan" value="1">
+                
+                <div class="mb-4">
+                    <label class="form-label text-muted small text-uppercase">Select Synapse Layer</label>
+                    <div class="d-grid gap-2">
+                        <button type="submit" name="plan_tier" value="FREE" class="btn btn-cyber btn-cyber-outline text-start p-3 {% if profile.plan_tier == 'FREE' %}active{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="text-white">INITIAL LAYER (FREE)</strong>
+                                    <div class="text-muted small mt-1">500MB storage | 3 ops daily limit</div>
+                                </div>
+                                <span class="badge-cyber badge-cyber-success">$0/mo</span>
+                            </div>
+                        </button>
+
+                        <button type="submit" name="plan_tier" value="PREMIUM" class="btn btn-cyber btn-cyber-outline text-start p-3 {% if profile.plan_tier == 'PREMIUM' %}active{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="text-white">QUANTUM CORE (PREMIUM)</strong>
+                                    <div class="text-muted small mt-1">5GB storage | Infinite operations | AI Chat</div>
+                                </div>
+                                <span class="badge-cyber badge-cyber-success">$19/mo</span>
+                            </div>
+                        </button>
+
+                        <button type="submit" name="plan_tier" value="ENTERPRISE" class="btn btn-cyber btn-cyber-outline text-start p-3 {% if profile.plan_tier == 'ENTERPRISE' %}active{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="text-white">GRID SYNAPSE (ENTERPRISE)</strong>
+                                    <div class="text-muted small mt-1">50GB storage | Programmatic APIs | Team Workspaces</div>
+                                </div>
+                                <span class="badge-cyber badge-cyber-success">$99/mo</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyApiKey() {
+        const copyText = document.getElementById("api-key-input");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+        alert("API Token key copied to local clip memory!");
+    }
+</script>
+{% endblock %}

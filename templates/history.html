@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="text-white font-monospace text-uppercase mb-1"><i class="fa-solid fa-clock-rotate-left text-purple me-2"></i> Operation Logs</h2>
+        <p class="text-muted small font-monospace">VERIFY HISTORICAL METRICS AND RETRIEVE EXPORTED DATA</p>
+    </div>
+</div>
+
+<!-- Filters Form -->
+<div class="glass-panel p-3 mb-5 font-monospace">
+    <form method="GET" action="{% url 'converter:history_page' %}" class="row g-3">
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-text bg-transparent border-secondary text-cyan border-opacity-25" style="border-right: none;"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" name="q" value="{{ query }}" class="form-control bg-transparent text-white border-secondary border-opacity-25" style="border-left: none;" placeholder="Search filename...">
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <select name="tool" class="form-select bg-transparent text-white border-secondary border-opacity-25">
+                <option value="" class="text-dark">All Tool Channels</option>
+                <option value="pdf_to_docx" {% if tool_filter == 'pdf_to_docx' %}selected{% endif %} class="text-dark">PDF to Word</option>
+                <option value="docx_to_pdf" {% if tool_filter == 'docx_to_pdf' %}selected{% endif %} class="text-dark">Word to PDF</option>
+                <option value="merge_pdf" {% if tool_filter == 'merge_pdf' %}selected{% endif %} class="text-dark">Merge PDF</option>
+                <option value="compress_pdf" {% if tool_filter == 'compress_pdf' %}selected{% endif %} class="text-dark">Compress PDF</option>
+                <option value="split_pdf" {% if tool_filter == 'split_pdf' %}selected{% endif %} class="text-dark">Split PDF</option>
+                <option value="jpg_to_pdf" {% if tool_filter == 'jpg_to_pdf' %}selected{% endif %} class="text-dark">JPG to PDF</option>
+                <option value="pdf_to_jpg" {% if tool_filter == 'pdf_to_jpg' %}selected{% endif %} class="text-dark">PDF to JPG</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="status" class="form-select bg-transparent text-white border-secondary border-opacity-25">
+                <option value="" class="text-dark">All Statuses</option>
+                <option value="SUCCESS" {% if status_filter == 'SUCCESS' %}selected{% endif %} class="text-dark">Success</option>
+                <option value="FAILED" {% if status_filter == 'FAILED' %}selected{% endif %} class="text-dark">Failed</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-cyber btn-cyber-cyan text-dark fw-bold">
+                <i class="fa-solid fa-filter me-1"></i> Apply
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- History Log Table -->
+<div class="glass-panel p-4">
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle border-secondary border-opacity-10 mb-0 font-monospace" style="background: transparent;">
+            <thead>
+                <tr class="text-muted small">
+                    <th scope="col" class="border-0">SOURCE DOCUMENT</th>
+                    <th scope="col" class="border-0">TRANSFORMATION TYPE</th>
+                    <th scope="col" class="border-0">DATE & TIME</th>
+                    <th scope="col" class="border-0">SPEED</th>
+                    <th scope="col" class="border-0">STATUS</th>
+                    <th scope="col" class="border-0 text-end">RETRIEVAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <i class="fa-solid {% if record.conversion_type == 'pdf_to_docx' or record.conversion_type == 'compress_pdf' or record.conversion_type == 'split_pdf' %}fa-file-pdf text-danger{% elif record.conversion_type == 'docx_to_pdf' %}fa-file-word text-primary{% else %}fa-file text-muted{% endif %} me-2"></i>
+                                <span class="text-white text-truncate d-inline-block" style="max-width: 320px;" title="{{ record.input_file.original_filename }}">
+                                    {{ record.input_file.original_filename }}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="small text-uppercase {% if record.conversion_type == 'pdf_to_docx' or record.conversion_type == 'compress_pdf' or record.conversion_type == 'pdf_to_jpg' %}text-neon-cyan{% elif record.conversion_type == 'docx_to_pdf' or record.conversion_type == 'split_pdf' %}text-neon-pink{% else %}text-neon-purple{% endif %}">
+                                {% if record.conversion_type == 'pdf_to_docx' %}PDF ➔ Word
+                                {% elif record.conversion_type == 'docx_to_pdf' %}Word ➔ PDF
+                                {% elif record.conversion_type == 'merge_pdf' %}Merge PDF
+                                {% elif record.conversion_type == 'compress_pdf' %}Compress PDF
+                                {% elif record.conversion_type == 'split_pdf' %}Split PDF
+                                {% elif record.conversion_type == 'jpg_to_pdf' %}JPG ➔ PDF
+                                {% elif record.conversion_type == 'pdf_to_jpg' %}PDF ➔ JPG
+                                {% else %}{{ record.conversion_type }}{% endif %}
+                            </span>
+                        </td>
+                        <td class="text-muted small">{{ record.created_at|date:"Y-m-d H:i" }} UTC</td>
+                        <td class="text-muted small">{{ record.execution_time }}s</td>
+                        <td>
+                            <span class="badge-cyber {% if record.status == 'SUCCESS' %}badge-cyber-success{% else %}badge-cyber-failed{% endif %}">
+                                {{ record.status }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            {% if record.output_file %}
+                                <a href="{% url 'converter:download' record.output_file.id %}" class="btn btn-sm btn-cyber btn-cyber-cyan text-dark px-3 py-1"><i class="fa-solid fa-download me-1"></i> Retrieve</a>
+                            {% else %}
+                                <span class="text-muted small">Payload Unavailable</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted small">Zero historical transaction records detected.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

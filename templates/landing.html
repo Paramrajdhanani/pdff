@@ -1,0 +1,463 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row align-items-center justify-content-center py-5 min-vh-75 position-relative overflow-hidden">
+    <!-- Floating Shape Orbs inside Hero -->
+    <div class="anti-gravity-shape shape-1" style="top: 10%; right: 40%;"></div>
+    <div class="anti-gravity-shape shape-2" style="bottom: 20%; left: 10%;"></div>
+
+    <!-- WebGL Canvas for Three.js 3D revolving backdrop -->
+    <div id="threejs-hero-container" class="position-absolute w-100 h-100 start-0 top-0" style="z-index: 1; opacity: 0.35; pointer-events: none;"></div>
+
+    <div class="col-lg-6 text-center text-lg-start mb-5 mb-lg-0" style="z-index: 2; position: relative;">
+        <div class="badge bg-dark border border-cyan text-info font-monospace py-2 px-3 mb-4 rounded-pill">
+            <span style="color: var(--neon-cyan);"><i class="fa-solid fa-bolt-lightning me-1 fa-bounce"></i> ZERO-GRAVITY DOCUMENT LAYER</span>
+        </div>
+        
+        <h1 class="display-3 fw-black text-white mb-3" style="font-family: var(--cyber-font-title); font-weight: 900; line-height: 1.1;">
+            Convert Word to PDF <br>
+            <span class="gradient-text-cyan-purple">Instantly</span>
+        </h1>
+        
+        <p class="lead text-muted mb-4" style="max-width: 580px; font-size: 1.1rem; line-height: 1.6;">
+            Decompile, merge, secure, compress, and translate document streams weightlessly. Experience high-end glassmorphic formatting and zero-latency conversions.
+        </p>
+        
+        <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-3">
+            <a href="#tools" class="btn btn-cyber btn-cyber-outline px-4 py-2">
+                <i class="fa-solid fa-gears me-2"></i> Explore Grid Tools
+            </a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'accounts:signup' %}" class="btn btn-cyber btn-cyber-cyan text-dark fw-bold px-4 py-2 pulse-neon-blue">
+                    <i class="fa-solid fa-user-plus me-2"></i> Register Profile
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="col-lg-6 text-center position-relative" style="z-index: 2;">
+        <!-- Futuristic Conversion Card -->
+        <div class="position-relative d-inline-block floating-card py-2 w-100" style="max-width: 460px;">
+            <div class="glass-panel glowing-border-gradient text-start p-4" style="border-width: 1.5px; background: rgba(7, 11, 20, 0.7); box-shadow: 0 0 50px rgba(0, 229, 255, 0.15);">
+                
+                {% if user.is_authenticated %}
+                    <!-- Quick Tool Tabs -->
+                    <div class="hero-tabs" id="hero-tool-tabs">
+                        <button type="button" class="hero-tab active" data-type="docx_to_pdf">Word to PDF</button>
+                        <button type="button" class="hero-tab" data-type="pdf_to_docx">PDF to Word</button>
+                        <button type="button" class="hero-tab" data-type="compress_pdf">Compress</button>
+                    </div>
+
+                    <form id="converter-form" action="{% url 'converter:convert_file' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="conversion_type" id="conversion-type" value="docx_to_pdf">
+
+                        <!-- Dropzone -->
+                        <div id="dropzone" class="dropzone-container mb-3" style="padding: 2.5rem 1.5rem;">
+                            <input type="file" name="file" id="file-input" class="d-none" accept=".docx">
+                            <div class="dropzone-icon">
+                                <i class="fa-solid fa-cloud-arrow-up text-cyan mb-2" id="drop-icon" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <h6 class="text-white font-monospace small mb-2" id="selected-file-text">Drag & Drop Word file here or click to browse</h6>
+                            <p class="text-muted small mb-0" id="accept-file-text" style="font-size: 0.75rem;">Supported format: Word Document (.docx) - Max 16MB</p>
+                        </div>
+
+                        <!-- Parameter Section (for hidden stuff if needed) -->
+                        <div id="parameter-section" class="mb-3 d-none"></div>
+
+                        <!-- Previews wrapper -->
+                        <div id="file-preview-wrapper" class="mb-3 d-none">
+                            <h6 class="text-white font-monospace small mb-2" style="font-size: 0.8rem;"><i class="fa-solid fa-file-lines text-cyan me-1"></i> PAYLOAD</h6>
+                            <div id="file-preview-list" class="file-preview-list" style="max-height: 120px;"></div>
+                        </div>
+
+                        <!-- Upload progress -->
+                        <div id="progress-wrapper" class="mb-3" style="display: none;">
+                            <div class="progress bg-dark bg-opacity-50 border border-secondary border-opacity-10 rounded-pill mb-1" style="height: 8px;">
+                                <div id="progress-bar" class="progress-bar rounded-pill" style="width: 0%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));"></div>
+                            </div>
+                            <div id="progress-text" class="text-muted font-monospace text-center" style="font-size: 0.75rem;">Initializing stream...</div>
+                        </div>
+
+                        <!-- AJAX Spinner -->
+                        <div id="spinner-section" class="text-center py-3 mb-3 border border-secondary border-opacity-10 rounded bg-black bg-opacity-20 d-none">
+                            <div class="spinner-border spinner-border-sm text-cyan mb-1" role="status"></div>
+                            <div class="text-white font-monospace" id="spinner-title" style="font-size: 0.75rem;">COMPILING PDF STRUCTURE...</div>
+                        </div>
+
+                        <div id="converter-error-alert" class="alert alert-cyber alert-cyber-danger text-start d-none py-2 px-3 mb-3" style="font-size: 0.8rem;"></div>
+
+                        <button type="submit" class="btn btn-cyber btn-cyber-cyan text-dark fw-bold w-100 py-2" id="submit-btn" style="font-size: 0.85rem;">
+                            <i class="fa-solid fa-terminal me-1"></i> <span id="submit-btn-text">Convert Word to PDF</span>
+                        </button>
+                    </form>
+                {% else %}
+                    <!-- Guest Dropzone UI triggers Auth Modal -->
+                    <div class="hero-tabs" id="guest-tool-tabs">
+                        <button type="button" class="hero-tab active">Word to PDF</button>
+                        <button type="button" class="hero-tab">PDF to Word</button>
+                        <button type="button" class="hero-tab">Compress</button>
+                    </div>
+
+                    <div id="guest-dropzone" class="dropzone-container mb-3" style="padding: 3.5rem 1.5rem;" data-bs-toggle="modal" data-bs-target="#authPromptModal">
+                        <div class="dropzone-icon">
+                            <i class="fa-solid fa-cloud-arrow-up text-cyan mb-2" style="font-size: 2.8rem;"></i>
+                        </div>
+                        <h6 class="text-white font-monospace small mb-2">Drag & Drop file here or click to browse</h6>
+                        <p class="text-muted small mb-0" style="font-size: 0.75rem;">Supported formats: DOCX, PDF - Max 16MB</p>
+                    </div>
+
+                    <button class="btn btn-cyber btn-cyber-cyan text-dark fw-bold w-100 py-2" data-bs-toggle="modal" data-bs-target="#authPromptModal" style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-bolt me-1"></i> Convert Instantly
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cyber-divider my-5"></div>
+
+<!-- Nodal Tools Launcher Section -->
+<section id="tools" class="py-5">
+    <div class="text-center mb-5">
+        <h2 class="text-white font-monospace"><i class="fa-solid fa-gears text-purple me-2"></i> CYBERNETIC UTILITY NETWORK</h2>
+        <p class="text-muted small font-monospace">SELECT A FLUX CORE NODAL GATEWAY TO BEGIN CONVERSION</p>
+    </div>
+
+    <!-- Category 1: Document Converters -->
+    <h4 class="text-cyan font-monospace mb-4 border-bottom border-dark pb-2"><i class="fa-solid fa-arrow-right-arrow-left me-2"></i> Document Converters</h4>
+    <div class="toolkit-launchpad-grid mb-5">
+        <a href="{% url 'converter:terminal' %}?tool=docx_to_pdf" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-pink);"><i class="fa-solid fa-file-word"></i></div>
+            <h5 class="toolkit-card-title">Word to PDF</h5>
+            <p class="toolkit-card-desc">Compile Word layouts into vector PDF formats.</p>
+        </a>
+        <a href="{% url 'converter:terminal' %}?tool=pdf_to_docx" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-cyan);"><i class="fa-solid fa-file-pdf"></i></div>
+            <h5 class="toolkit-card-title">PDF to Word</h5>
+            <p class="toolkit-card-desc">Translate editable formatting layout into Word.</p>
+        </a>
+        <a href="{% url 'converter:terminal' %}?tool=jpg_to_pdf" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-purple);"><i class="fa-solid fa-file-image"></i></div>
+            <h5 class="toolkit-card-title">JPG to PDF</h5>
+            <p class="toolkit-card-desc">Pack various raster images into high-res page lists.</p>
+        </a>
+        <a href="{% url 'converter:terminal' %}?tool=pdf_to_jpg" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-cyan);"><i class="fa-solid fa-images"></i></div>
+            <h5 class="toolkit-card-title">PDF to JPG</h5>
+            <p class="toolkit-card-desc">Render page structures into packed zip archives.</p>
+        </a>
+    </div>
+
+    <!-- Category 2: Advanced PDF Operations -->
+    <h4 class="text-purple font-monospace mb-4 border-bottom border-dark pb-2"><i class="fa-solid fa-layer-group me-2"></i> Advanced PDF Operations</h4>
+    <div class="toolkit-launchpad-grid mb-5">
+        <a href="{% url 'converter:terminal' %}?tool=merge_pdf" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-purple);"><i class="fa-solid fa-object-group"></i></div>
+            <h5 class="toolkit-card-title">Merge PDF</h5>
+            <p class="toolkit-card-desc">Combine 2 or more files into a single unified stream.</p>
+        </a>
+        <a href="{% url 'converter:terminal' %}?tool=compress_pdf" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-cyan);"><i class="fa-solid fa-compress"></i></div>
+            <h5 class="toolkit-card-title">Compress PDF</h5>
+            <p class="toolkit-card-desc">Optimize layout object streams to shrink size.</p>
+        </a>
+        <a href="{% url 'converter:terminal' %}?tool=split_pdf" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-pink);"><i class="fa-solid fa-scissors"></i></div>
+            <h5 class="toolkit-card-title">Split PDF</h5>
+            <p class="toolkit-card-desc">Extract document pages into a zipped archive.</p>
+        </a>
+        <a href="{% url 'converter:terminal' %}?tool=rotate_pdf" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-cyan);"><i class="fa-solid fa-arrows-rotate"></i></div>
+            <h5 class="toolkit-card-title">Rotate PDF</h5>
+            <p class="toolkit-card-desc">Rotate page geometries (90/180/270 degrees).</p>
+        </a>
+        <a href="{% url 'converter:terminal' %}?tool=protect_pdf" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-purple);"><i class="fa-solid fa-lock"></i></div>
+            <h5 class="toolkit-card-title">Protect PDF</h5>
+            <p class="toolkit-card-desc">Secure PDF layers with robust password protection.</p>
+        </a>
+        <a href="{% url 'converter:terminal' %}?tool=unlock_pdf" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-pink);"><i class="fa-solid fa-lock-open"></i></div>
+            <h5 class="toolkit-card-title">Unlock PDF</h5>
+            <p class="toolkit-card-desc">Remove passwords from unlocked files.</p>
+        </a>
+        <a href="{% url 'converter:terminal' %}?tool=watermark_pdf" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-cyan);"><i class="fa-solid fa-pen-nib"></i></div>
+            <h5 class="toolkit-card-title">Watermark PDF</h5>
+            <p class="toolkit-card-desc">Stamp branding overlay texts diagonally on pages.</p>
+        </a>
+        <a href="{% url 'converter:terminal' %}?tool=add_page_numbers" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-purple);"><i class="fa-solid fa-list-ol"></i></div>
+            <h5 class="toolkit-card-title">Add Page Numbers</h5>
+            <p class="toolkit-card-desc">Overlay clean numbers automatically on headers/footers.</p>
+        </a>
+    </div>
+
+</section>
+
+<div class="cyber-divider my-5"></div>
+
+<!-- Subscriptions Plans Pricing Grid -->
+<section id="pricing" class="py-5">
+    <div class="text-center mb-5">
+        <h2 class="text-white font-monospace"><i class="fa-solid fa-credit-card text-cyan me-2"></i> PLATFORM SUBSCRIPTION PLANS</h2>
+        <p class="text-muted small font-monospace">ACCESS ALL FLUX CORE NODAL GATEWAYS WITH UNRESTRICTED BANDWIDTH</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <!-- Free Plan -->
+        <div class="col-md-4">
+            <div class="glass-panel text-center h-100 flex-column d-flex justify-content-between p-4" style="border-color: rgba(255,255,255,0.08);">
+                <div>
+                    <h4 class="text-muted font-monospace">INITIAL LAYER</h4>
+                    <h2 class="text-white mt-2">$0 <span class="fs-6 text-muted">/ month</span></h2>
+                    <hr class="border-secondary opacity-25">
+                    <ul class="list-unstyled text-start text-muted my-4 font-monospace" style="font-size: 0.9rem;">
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> 3 operations per day</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> 16MB max upload size</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> 500MB local cloud storage</li>
+                        <li class="mb-2 text-decoration-line-through"><i class="fa-solid fa-xmark text-danger me-2"></i> Unlimited Conversions</li>
+                        <li class="mb-2 text-decoration-line-through"><i class="fa-solid fa-xmark text-danger me-2"></i> Developer API Tokens</li>
+                    </ul>
+                </div>
+                <a href="{% url 'accounts:signup' %}" class="btn btn-cyber btn-cyber-outline w-100 mt-3">Deploy Identity</a>
+            </div>
+        </div>
+
+        <!-- Premium Plan -->
+        <div class="col-md-4">
+            <div class="glass-panel text-center h-100 flex-column d-flex justify-content-between p-4" style="border-color: var(--neon-purple); box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);">
+                <div>
+                    <div class="badge bg-purple text-white mb-2 font-monospace">RECOMMENDED</div>
+                    <h4 class="text-purple font-monospace">QUANTUM CORE</h4>
+                    <h2 class="text-white mt-2">$19 <span class="fs-6 text-muted">/ month</span></h2>
+                    <hr class="border-secondary opacity-25">
+                    <ul class="list-unstyled text-start text-muted my-4 font-monospace" style="font-size: 0.9rem;">
+                        <li class="mb-2 text-white"><i class="fa-solid fa-check text-purple me-2"></i> Infinite operations daily</li>
+                        <li class="mb-2 text-white"><i class="fa-solid fa-check text-purple me-2"></i> 64MB max upload payload</li>
+                        <li class="mb-2 text-white"><i class="fa-solid fa-check text-purple me-2"></i> 5GB cloud storage quota</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-purple me-2"></i> Complete OCR & AI chatbot</li>
+                        <li class="mb-2 text-decoration-line-through"><i class="fa-solid fa-xmark text-danger me-2"></i> Dev REST API Tokens</li>
+                    </ul>
+                </div>
+                
+                <form action="{% url 'accounts:profile' %}" method="POST" class="w-100 mt-3">
+                    {% csrf_token %}
+                    <input type="hidden" name="change_plan" value="1">
+                    <input type="hidden" name="plan_tier" value="PREMIUM">
+                    <button type="submit" class="btn btn-cyber btn-cyber-cyan text-dark fw-bold w-100">Activate Quantum</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Enterprise Plan -->
+        <div class="col-md-4">
+            <div class="glass-panel text-center h-100 flex-column d-flex justify-content-between p-4" style="border-color: rgba(255,255,255,0.08);">
+                <div>
+                    <h4 class="text-muted font-monospace">GRID SYNAPSE</h4>
+                    <h2 class="text-white mt-2">$99 <span class="fs-6 text-muted">/ month</span></h2>
+                    <hr class="border-secondary opacity-25">
+                    <ul class="list-unstyled text-start text-muted my-4 font-monospace" style="font-size: 0.9rem;">
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> Infinite operations daily</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> 512MB max upload limit</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> 50GB cloud storage quota</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> Developer REST API access</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> Team Workspace members (10)</li>
+                    </ul>
+                </div>
+                
+                <form action="{% url 'accounts:profile' %}" method="POST" class="w-100 mt-3">
+                    {% csrf_token %}
+                    <input type="hidden" name="change_plan" value="1">
+                    <input type="hidden" name="plan_tier" value="ENTERPRISE">
+                    <button type="submit" class="btn btn-cyber btn-cyber-outline w-100">Contact Sales / Activate</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Auth Prompt Modal -->
+<div class="modal fade modal-cyber" id="authPromptModal" tabindex="-1" aria-labelledby="authPromptModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-monospace text-cyan" id="authPromptModalLabel">
+                    <i class="fa-solid fa-shield-halved me-2"></i> IDENTITY REGISTER REQUIRED
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="fs-1 text-purple mb-3" style="filter: drop-shadow(0 0 10px var(--neon-purple));">
+                    <i class="fa-solid fa-fingerprint fa-bounce"></i>
+                </div>
+                <h5 class="text-white font-monospace mb-3">Quantum Signature Required</h5>
+                <p class="text-muted small px-3">
+                    Our zero-gravity conversion grid requires an active identity registry. Sign up or log in to secure your document operations and download converted payloads.
+                </p>
+            </div>
+            <div class="modal-footer justify-content-center gap-3">
+                <a href="{% url 'accounts:login' %}" class="btn btn-cyber btn-cyber-outline px-4 py-2">
+                    <i class="fa-solid fa-right-to-bracket me-1"></i> Access Portal
+                </a>
+                <a href="{% url 'accounts:signup' %}" class="btn btn-cyber btn-cyber-cyan text-dark fw-bold px-4 py-2">
+                    <i class="fa-solid fa-user-plus me-1"></i> Initialize Identity
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Hero quick-tabs selection logic for authenticated user
+        const tabs = document.querySelectorAll('#hero-tool-tabs .hero-tab');
+        if (tabs.length > 0) {
+            const typeInput = document.getElementById('conversion-type');
+            const fileInput = document.getElementById('file-input');
+            const dropzone = document.getElementById('dropzone');
+            const selectedFileText = document.getElementById('selected-file-text');
+            const acceptText = document.getElementById('accept-file-text');
+            const submitText = document.getElementById('submit-btn-text');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const type = tab.getAttribute('data-type');
+                    typeInput.value = type;
+                    
+                    // Clear files
+                    if (fileInput) fileInput.value = '';
+                    const filePreviewWrapper = document.getElementById('file-preview-wrapper');
+                    if (filePreviewWrapper) filePreviewWrapper.classList.add('d-none');
+                    
+                    // Update styling based on type
+                    if (type === 'docx_to_pdf') {
+                        selectedFileText.innerText = 'Drag & Drop Word file here or click to browse';
+                        acceptText.innerText = 'Supported format: Word Document (.docx) - Max 16MB';
+                        submitText.innerText = 'Convert Word to PDF';
+                        fileInput.setAttribute('accept', '.docx');
+                    } else if (type === 'pdf_to_docx') {
+                        selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
+                        acceptText.innerText = 'Supported format: PDF (.pdf) - Max 16MB';
+                        submitText.innerText = 'Convert PDF to Word';
+                        fileInput.setAttribute('accept', '.pdf');
+                    } else if (type === 'compress_pdf') {
+                        selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
+                        acceptText.innerText = 'Supported format: PDF (.pdf) - Max 16MB';
+                        submitText.innerText = 'Compress PDF';
+                        fileInput.setAttribute('accept', '.pdf');
+                    }
+                    
+                    // Reset dropzone borders
+                    if (dropzone) {
+                        dropzone.style.borderColor = 'rgba(0, 242, 254, 0.3)';
+                        dropzone.style.boxShadow = 'none';
+                    }
+                });
+            });
+        }
+        
+        // Guest quick-tabs redirection popup
+        const guestTabs = document.querySelectorAll('#guest-tool-tabs .hero-tab');
+        guestTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                guestTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show modal programmatically if not already visible
+                const modalEl = document.getElementById('authPromptModal');
+                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                modal.show();
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 3D revolving loop background effect on Hero section via Three.js
+    const container = document.getElementById('threejs-hero-container');
+    if (container) {
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+        
+        // Add futuristic digital ring ring geometry
+        const geometry = new THREE.TorusGeometry(8, 0.15, 16, 100);
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0x8B5CF6, 
+            wireframe: true 
+        });
+        const torus = new THREE.Mesh(geometry, material);
+        scene.add(torus);
+        
+        // Dynamic constellation point particles inside ring
+        const particlesGeom = new THREE.BufferGeometry();
+        const count = 300;
+        const positions = new Float32Array(count * 3);
+        
+        for(let i=0; i<count*3; i+=3) {
+            positions[i] = (Math.random() - 0.5) * 22;
+            positions[i+1] = (Math.random() - 0.5) * 22;
+            positions[i+2] = (Math.random() - 0.5) * 15;
+        }
+        
+        particlesGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particlesMat = new THREE.PointsMaterial({ 
+            size: 0.08, 
+            color: 0x00E5FF 
+        });
+        const particles = new THREE.Points(particlesGeom, particlesMat);
+        scene.add(particles);
+        
+        camera.position.z = 15;
+        
+        // Mouse reaction logic
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 4;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 4;
+        });
+
+        const animate = function () {
+            requestAnimationFrame(animate);
+            
+            torus.rotation.x += 0.003;
+            torus.rotation.y += 0.005;
+            
+            particles.rotation.y -= 0.002;
+            
+            // Smooth mouse follow physics
+            torus.rotation.y += (mouseX - torus.rotation.y) * 0.05;
+            torus.rotation.x += (mouseY - torus.rotation.x) * 0.05;
+            
+            renderer.render(scene, camera);
+        };
+        
+        animate();
+        
+        // Handle window resizing
+        window.addEventListener('resize', () => {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}ConvertPro - Futuristic PDF Toolkit{% endblock %}
+
+{% block content %}
+<div class="row align-items-center justify-content-center py-5 min-vh-75">
+    <div class="col-lg-6 col-md-10 text-center text-lg-start mb-5 mb-lg-0">
+        <div class="badge bg-dark border border-cyan text-info font-monospace py-2 px-3 mb-4 rounded-pill">
+            <span style="color: var(--neon-cyan);"><i class="fa-solid fa-bolt-lightning me-1 fa-bounce"></i> ZERO GRAVITY DOCUMENT SYNTHESIS</span>
+        </div>
+        
+        <h1 class="display-4 fw-black text-white mb-3" style="font-family: var(--cyber-font-title); font-weight: 900; line-height: 1.15;">
+            Transpose Streams <br>
+            With <span class="gradient-text-cyan-purple">Quantum Grid</span>
+        </h1>
+        
+        <p class="lead text-muted mb-4" style="max-width: 500px; font-size: 1.05rem;">
+            A high-end, zero-latency online PDF toolkit. Convert, merge, compress, split, and transform document geometries instantly in a secure, glassmorphic space environment.
+        </p>
+        
+        <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-3">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('converter.converter_page') }}" class="btn btn-cyber btn-cyber-cyan">
+                    <i class="fa-solid fa-rocket me-2"></i> Launch Terminal
+                </a>
+                <a href="{{ url_for('converter.dashboard') }}" class="btn btn-cyber btn-cyber-outline">
+                    <i class="fa-solid fa-gauge-high me-2"></i> Control Center
+                </a>
+            {% else %}
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-cyber btn-cyber-cyan">
+                    <i class="fa-solid fa-user-plus me-2"></i> Initialize Identity
+                </a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-cyber btn-cyber-outline">
+                    <i class="fa-solid fa-right-to-bracket me-2"></i> Access Portal
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="col-lg-6 col-md-8 text-center position-relative">
+        <!-- Floating Cyber Graphic -->
+        <div class="position-relative d-inline-block floating-card py-4">
+            <div class="glass-panel text-center position-relative" style="width: 330px; z-index: 2; border-color: rgba(0, 242, 254, 0.25); box-shadow: 0 0 45px rgba(0, 242, 254, 0.1); background: rgba(5,5,15,0.45);">
+                <div class="stats-orb" style="border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <h4 class="text-white mt-3 font-monospace">CONVERTPRO OS</h4>
+                <p class="text-muted small font-monospace">VER: 2.6.0-GRAVITY</p>
+                
+                <div class="my-4 d-flex justify-content-center align-items-center gap-3">
+                    <span class="badge bg-secondary bg-opacity-25 border border-secondary text-light font-monospace small">PDF</span>
+                    <i class="fa-solid fa-arrow-right-arrow-left text-info fa-pulse"></i>
+                    <span class="badge bg-secondary bg-opacity-25 border border-secondary text-light font-monospace small">WORD</span>
+                    <i class="fa-solid fa-arrow-right-arrow-left text-info fa-pulse"></i>
+                    <span class="badge bg-secondary bg-opacity-25 border border-secondary text-light font-monospace small">IMG</span>
+                </div>
+                
+                <div class="d-flex justify-content-around text-center mt-3">
+                    <div>
+                        <div class="text-cyan small fw-bold font-monospace">COMPRESS</div>
+                        <div class="text-muted small font-monospace">MEM-ZIP</div>
+                    </div>
+                    <div style="border-left: 1px solid var(--glass-border);"></div>
+                    <div>
+                        <div class="text-purple small fw-bold font-monospace">MERGE</div>
+                        <div class="text-muted small font-monospace">CONCAT</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Corner brackets -->
+            <div class="position-absolute" style="top: -15px; left: -15px; width: 50px; height: 50px; border-top: 3px solid var(--neon-cyan); border-left: 3px solid var(--neon-cyan); pointer-events: none;"></div>
+            <div class="position-absolute" style="bottom: -15px; right: -15px; width: 50px; height: 50px; border-bottom: 3px solid var(--neon-pink); border-right: 3px solid var(--neon-pink); pointer-events: none;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mb-5 mt-4">
+    <h2 class="text-white font-monospace"><i class="fa-solid fa-gears text-purple me-2"></i> CORE TRANSFORMATION ENGINES</h2>
+    <p class="text-muted small font-monospace">SELECT A FLUX CORE NODAL TOOL TO BEGIN</p>
+</div>
+
+<!-- 7-Card Toolkit Launchpad -->
+<div class="toolkit-launchpad-grid mb-5">
+    <!-- PDF to Word -->
+    <a href="{{ url_for('converter.converter_page') }}?tool=pdf_to_docx" class="toolkit-launchpad-card">
+        <div class="toolkit-card-icon" style="color: var(--neon-cyan); text-shadow: 0 0 15px rgba(0, 242, 254, 0.2);">
+            <i class="fa-solid fa-file-word"></i>
+        </div>
+        <h5 class="toolkit-card-title">PDF to Word</h5>
+        <p class="toolkit-card-desc">Translate portable files into fully-editable Word documents with perfect structural formatting.</p>
+    </a>
+
+    <!-- Word to PDF -->
+    <a href="{{ url_for('converter.converter_page') }}?tool=docx_to_pdf" class="toolkit-launchpad-card">
+        <div class="toolkit-card-icon" style="color: var(--neon-pink); text-shadow: 0 0 15px rgba(255, 0, 127, 0.2);">
+            <i class="fa-solid fa-file-pdf"></i>
+        </div>
+        <h5 class="toolkit-card-title">Word to PDF</h5>
+        <p class="toolkit-card-desc">Compile editable Word documents into solid, reliable PDFs using quantum-precise grid formats.</p>
+    </a>
+
+    <!-- Merge PDF -->
+    <a href="{{ url_for('converter.converter_page') }}?tool=merge_pdf" class="toolkit-launchpad-card">
+        <div class="toolkit-card-icon" style="color: var(--neon-purple); text-shadow: 0 0 15px rgba(157, 78, 221, 0.2);">
+            <i class="fa-solid fa-object-group"></i>
+        </div>
+        <h5 class="toolkit-card-title">Merge PDF</h5>
+        <p class="toolkit-card-desc">Combine multiple PDF archives together into a single, unified stream without losing pagination details.</p>
+    </a>
+
+    <!-- Compress PDF -->
+    <a href="{{ url_for('converter.converter_page') }}?tool=compress_pdf" class="toolkit-launchpad-card">
+        <div class="toolkit-card-icon" style="color: var(--neon-cyan); text-shadow: 0 0 15px rgba(0, 242, 254, 0.2);">
+            <i class="fa-solid fa-compress"></i>
+        </div>
+        <h5 class="toolkit-card-title">Compress PDF</h5>
+        <p class="toolkit-card-desc">Optimize document sizes to fit mailing limits using advanced layout compression.</p>
+    </a>
+
+    <!-- Split PDF -->
+    <a href="{{ url_for('converter.converter_page') }}?tool=split_pdf" class="toolkit-launchpad-card">
+        <div class="toolkit-card-icon" style="color: var(--neon-pink); text-shadow: 0 0 15px rgba(255, 0, 127, 0.2);">
+            <i class="fa-solid fa-scissors"></i>
+        </div>
+        <h5 class="toolkit-card-title">Split PDF</h5>
+        <p class="toolkit-card-desc">Disassemble PDF structures into individual single-page documents zipped into a single folder.</p>
+    </a>
+
+    <!-- JPG to PDF -->
+    <a href="{{ url_for('converter.converter_page') }}?tool=jpg_to_pdf" class="toolkit-launchpad-card">
+        <div class="toolkit-card-icon" style="color: var(--neon-purple); text-shadow: 0 0 15px rgba(157, 78, 221, 0.2);">
+            <i class="fa-solid fa-file-image"></i>
+        </div>
+        <h5 class="toolkit-card-title">JPG to PDF</h5>
+        <p class="toolkit-card-desc">Merge various images (JPG/PNG) into a single high-quality PDF page layout container.</p>
+    </a>
+
+    <!-- PDF to JPG -->
+    <a href="{{ url_for('converter.converter_page') }}?tool=pdf_to_jpg" class="toolkit-launchpad-card">
+        <div class="toolkit-card-icon" style="color: var(--neon-cyan); text-shadow: 0 0 15px rgba(0, 242, 254, 0.2);">
+            <i class="fa-solid fa-images"></i>
+        </div>
+        <h5 class="toolkit-card-title">PDF to JPG</h5>
+        <p class="toolkit-card-desc">Export each PDF page into high-resolution JPG images packaged in a `.zip` archive.</p>
+    </a>
+</div>
+
+<div class="cyber-divider"></div>
+
+<!-- Feature Showcases -->
+<div class="row g-4 justify-content-center py-4">
+    <div class="col-md-4">
+        <div class="glass-panel glass-panel-hover h-100 text-center">
+            <div class="fs-1 mb-3" style="color: var(--neon-cyan); text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);">
+                <i class="fa-solid fa-gauge-simple-high"></i>
+            </div>
+            <h4 class="text-white">Blazing Rapid Speed</h4>
+            <p class="text-muted mb-0">Powered by server-optimized layout parsing for immediate conversions under 5 seconds.</p>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="glass-panel glass-panel-hover h-100 text-center">
+            <div class="fs-1 mb-3" style="color: var(--neon-purple); text-shadow: 0 0 10px rgba(157, 78, 221, 0.3);">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h4 class="text-white">Anti-Gravity Lockbox</h4>
+            <p class="text-muted mb-0">Files are processed in memory or protected temp streams, automatically self-destructing after 2 hours.</p>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="glass-panel glass-panel-hover h-100 text-center">
+            <div class="fs-1 mb-3" style="color: var(--neon-pink); text-shadow: 0 0 10px rgba(255, 0, 127, 0.3);">
+                <i class="fa-solid fa-expand"></i>
+            </div>
+            <h4 class="text-white">Completely Responsive</h4>
+            <p class="text-muted mb-0">Access your document dashboard on-the-go. Adaptable UI for mobile, tablet, and widescreen layouts.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

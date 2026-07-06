@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <!-- Left Column: Tool Selector Categories -->
+    <div class="col-lg-4 mb-4 mb-lg-0">
+        <div class="glass-panel p-3" style="max-height: 80vh; overflow-y: auto;">
+            <h5 class="text-white font-monospace text-uppercase mb-3 px-2"><i class="fa-solid fa-list text-cyan me-2"></i> PDF TOOLKIT NODES</h5>
+            
+            <!-- Category 1: Standard Converters -->
+            <div class="mb-4">
+                <div class="text-cyan small font-monospace text-uppercase px-2 mb-2"><i class="fa-solid fa-arrow-right-arrow-left me-1"></i> Converters</div>
+                <div class="list-group list-group-flush">
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn active" data-type="pdf_to_docx" data-desc="Decompile layout page boundaries and extract formatted Microsoft Word documents.">
+                        <i class="fa-solid fa-file-pdf text-danger me-2"></i> PDF to Word
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="docx_to_pdf" data-desc="Compile editable Word files into high-fidelity layout page documents.">
+                        <i class="fa-solid fa-file-word text-primary me-2"></i> Word to PDF
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="jpg_to_pdf" data-desc="Pack various raster formats (JPG/PNG) into single page overlays.">
+                        <i class="fa-solid fa-file-image text-warning me-2"></i> JPG to PDF
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="pdf_to_jpg" data-desc="Rasterize PDF vector layers and package pages inside compressed ZIPs.">
+                        <i class="fa-solid fa-images text-cyan me-2"></i> PDF to JPG
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category 2: Document Operations -->
+            <div class="mb-4">
+                <div class="text-purple small font-monospace text-uppercase px-2 mb-2"><i class="fa-solid fa-screwdriver-wrench me-1"></i> PDF Operations</div>
+                <div class="list-group list-group-flush">
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="merge_pdf" data-desc="Combine 2 or more document streams into a single sequential layout.">
+                        <i class="fa-solid fa-object-group text-purple me-2"></i> Merge PDF
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="compress_pdf" data-desc="Re-code stream weights to compress total file sizes.">
+                        <i class="fa-solid fa-compress text-cyan me-2"></i> Compress PDF
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="split_pdf" data-desc="Disassemble page arrays into isolated individual files inside a ZIP.">
+                        <i class="fa-solid fa-scissors text-danger me-2"></i> Split PDF
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="rotate_pdf" data-desc="Re-orient page layout grids (90/180/270 degrees clockwise).">
+                        <i class="fa-solid fa-arrows-rotate text-success me-2"></i> Rotate PDF
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="protect_pdf" data-desc="Lock PDF read and metadata access with strong user pass-keys.">
+                        <i class="fa-solid fa-lock text-warning me-2"></i> Protect PDF
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="unlock_pdf" data-desc="Strip user lock layers from decrypted PDF archives.">
+                        <i class="fa-solid fa-lock-open text-info me-2"></i> Unlock PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category 3: Custom Editing -->
+            <div class="mb-4">
+                <div class="text-pink small font-monospace text-uppercase px-2 mb-2"><i class="fa-solid fa-marker me-1"></i> Content & Editing</div>
+                <div class="list-group list-group-flush">
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="watermark_pdf" data-desc="Stamp translucent custom text overlays diagonally across all pages.">
+                        <i class="fa-solid fa-pen-fancy text-pink me-2"></i> Watermark PDF
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="remove_watermark" data-desc="Strip overlay branding objects from page structures.">
+                        <i class="fa-solid fa-eraser text-warning me-2"></i> Remove Watermark
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="add_page_numbers" data-desc="Dynamically overlay incremental numbers at page bottom margins.">
+                        <i class="fa-solid fa-list-ol text-info me-2"></i> Add Page Numbers
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="extract_pages" data-desc="Specify and compile particular page indices into a clean output file.">
+                        <i class="fa-solid fa-file-export text-success me-2"></i> Extract Pages
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="organize_pages" data-desc="Re-order or extract layout sequences using list formats (e.g. 3,1,2).">
+                        <i class="fa-solid fa-folder-open text-primary me-2"></i> Organize Pages
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="repair_pdf" data-desc="Rebuild damaged index tables and recover corrupt file bodies.">
+                        <i class="fa-solid fa-toolbox text-muted me-2"></i> Repair PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category 4: Interactive & Forms -->
+            <div class="mb-4">
+                <div class="text-cyan small font-monospace text-uppercase px-2 mb-2"><i class="fa-solid fa-signature me-1"></i> Forms & eSign</div>
+                <div class="list-group list-group-flush">
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="esign_pdf" data-desc="Overlay custom signature PNG/JPG image vectors onto the document layers.">
+                        <i class="fa-solid fa-file-signature text-purple me-2"></i> eSign PDF
+                    </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="fill_form" data-desc="Write database field records directly into interactive PDF forms.">
+                        <i class="fa-solid fa-keyboard text-cyan me-2"></i> Fill PDF Forms
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Right Column: Dropzone and Action Controller -->
+    <div class="col-lg-8">
+        <div class="glass-panel glowing-border-gradient position-relative p-4 h-100 d-flex flex-column justify-content-between" style="border-width: 1.5px;">
+            <div>
+                <!-- Active Tool Description -->
+                <div class="mb-4">
+                    <h3 class="text-white font-monospace text-uppercase" id="terminal-tool-title">PDF to Word</h3>
+                    <p class="text-muted small mb-0" id="terminal-tool-desc">Decompile layout page boundaries and extract formatted Microsoft Word documents.</p>
+                </div>
+
+                <!-- Django Action Form -->
+                <form id="converter-form" action="{% url 'converter:convert_file' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="conversion_type" id="conversion-type" value="pdf_to_docx">
+
+                    <!-- Interactive Drag & Drop Area -->
+                    <div id="dropzone" class="dropzone-container mb-4">
+                        <input type="file" name="file" id="file-input" class="d-none" accept=".pdf" multiple>
+                        <div class="dropzone-icon">
+                            <i class="fa-solid fa-cloud-arrow-up text-cyan mb-2" id="drop-icon"></i>
+                        </div>
+                        <h5 class="text-white font-monospace small mb-2" id="selected-file-text">Drag & Drop PDF here or click to browse</h5>
+                        <p class="text-muted small mb-0" id="accept-file-text">Supported format: PDF (.pdf) - Max 16MB</p>
+                    </div>
+
+                    <!-- Dynamic Parameters Wrapper -->
+                    <div id="parameter-section" class="mb-4 d-none p-3 border border-secondary border-opacity-10 rounded bg-dark bg-opacity-25 font-monospace">
+                        <h6 class="text-cyan small text-uppercase mb-3"><i class="fa-solid fa-sliders me-1"></i> Core Parameters</h6>
+                        
+                        <!-- Rotate Angle Selection -->
+                        <div id="param-rotate" class="d-none">
+                            <label class="form-label text-muted small text-uppercase">Rotation Angle</label>
+                            <select name="rotate_angle" class="form-select bg-transparent text-white border-secondary border-opacity-25 small">
+                                <option value="90" class="text-dark">90 Degrees Clockwise</option>
+                                <option value="180" class="text-dark">180 Degrees</option>
+                                <option value="270" class="text-dark">270 Degrees</option>
+                            </select>
+                        </div>
+
+                        <!-- Cryptography / Password inputs -->
+                        <div id="param-password" class="d-none">
+                            <label class="form-label text-muted small text-uppercase">Lock/Unlock Password</label>
+                            <input type="password" name="password" class="form-control bg-transparent text-white border-secondary border-opacity-25 small" placeholder="Specify code key...">
+                        </div>
+
+                        <!-- Watermark text inputs -->
+                        <div id="param-watermark" class="d-none">
+                            <label class="form-label text-muted small text-uppercase">Stamp Text</label>
+                            <input type="text" name="watermark_text" class="form-control bg-transparent text-white border-secondary border-opacity-25 small" placeholder="CONFIDENTIAL" value="CONFIDENTIAL">
+                        </div>
+
+                        <!-- Indices extraction input -->
+                        <div id="param-extract" class="d-none">
+                            <label class="form-label text-muted small text-uppercase">Page index selections (e.g. 1, 3, 5)</label>
+                            <input type="text" name="extract_pages_list" class="form-control bg-transparent text-white border-secondary border-opacity-25 small" placeholder="1,2,5" value="1">
+                        </div>
+
+                        <!-- Indices organization ordering input -->
+                        <div id="param-organize" class="d-none">
+                            <label class="form-label text-muted small text-uppercase">Target sequence index order (e.g. 2, 1, 3)</label>
+                            <input type="text" name="organize_order_list" class="form-control bg-transparent text-white border-secondary border-opacity-25 small" placeholder="3,1,2" value="1">
+                        </div>
+
+                        <!-- eSign Image upload input -->
+                        <div id="param-esign" class="d-none">
+                            <label class="form-label text-muted small text-uppercase">Signature transparent overlay image (PNG/JPG)</label>
+                            <input type="file" name="signature_image" class="form-control bg-transparent text-white border-secondary border-opacity-25 small" accept=".png,.jpg,.jpeg">
+                        </div>
+                    </div>
+
+                    <!-- File Previews Section -->
+                    <div id="file-preview-wrapper" class="mb-4 d-none">
+                        <h6 class="text-white font-monospace small mb-3"><i class="fa-solid fa-file-lines text-cyan me-1"></i> PAYLOAD DIRECTORY</h6>
+                        <div id="file-preview-list" class="file-preview-list"></div>
+                    </div>
+
+                    <!-- Upload Progress Loader -->
+                    <div id="progress-wrapper" class="mb-4" style="display: none;">
+                        <div class="progress bg-dark bg-opacity-50 border border-secondary border-opacity-10 rounded-pill mb-2" style="height: 10px;">
+                            <div id="progress-bar" class="progress-bar rounded-pill" style="width: 0%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));"></div>
+                        </div>
+                        <div id="progress-text" class="text-muted small font-monospace text-center">Initializing streams...</div>
+                    </div>
+
+                    <!-- AJAX Action Spinner -->
+                    <div id="spinner-section" class="text-center py-4 mb-4 border border-secondary border-opacity-10 rounded bg-black bg-opacity-20 d-none">
+                        <div class="spinner-border text-cyan mb-2" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <div class="text-white small font-monospace" id="spinner-title">TRANSLATING DOCUMENT GEOMETRY...</div>
+                        <p class="text-muted small font-monospace mt-1 mb-0">Decompressing active structures. Do not close gateway connection.</p>
+                    </div>
+
+                    <div id="converter-error-alert" class="alert alert-cyber alert-cyber-danger text-start d-none py-2 px-3 mb-4"></div>
+
+                    <!-- Execution submit triggers -->
+                    <button type="submit" class="btn btn-cyber btn-cyber-cyan text-dark fw-bold w-100 py-3" id="submit-btn">
+                        <i class="fa-solid fa-terminal me-2"></i> <span id="submit-btn-text">INITIALIZE CONVERSION</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // JS Logic specifically targeting tool switching and input settings updates in terminal
+    document.addEventListener('DOMContentLoaded', () => {
+        const toolButtons = document.querySelectorAll('.tool-btn');
+        const toolTitle = document.getElementById('terminal-tool-title');
+        const toolDesc = document.getElementById('terminal-tool-desc');
+        const typeInput = document.getElementById('conversion-type');
+        const fileInput = document.getElementById('file-input');
+        const submitText = document.getElementById('submit-btn-text');
+        
+        const paramSection = document.getElementById('parameter-section');
+        const paramRotate = document.getElementById('param-rotate');
+        const paramPassword = document.getElementById('param-password');
+        const paramWatermark = document.getElementById('param-watermark');
+        const paramExtract = document.getElementById('param-extract');
+        const paramOrganize = document.getElementById('param-organize');
+        const paramEsign = document.getElementById('param-esign');
+
+        const filePreviewWrapper = document.getElementById('file-preview-wrapper');
+        const filePreviewList = document.getElementById('file-preview-list');
+        const selectedFileText = document.getElementById('selected-file-text');
+        const acceptText = document.getElementById('accept-file-text');
+
+        toolButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Toggle active buttons
+                toolButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const type = btn.getAttribute('data-type');
+                const desc = btn.getAttribute('data-desc');
+                const name = btn.innerText.trim();
+
+                // Update details
+                toolTitle.innerText = name;
+                toolDesc.innerText = desc;
+                typeInput.value = type;
+                submitText.innerText = `INITIALIZE ${name.toUpperCase()}`;
+
+                // Clear previous files on tools swap
+                fileInput.value = '';
+                filePreviewWrapper.classList.add('d-none');
+                filePreviewList.innerHTML = '';
+                
+                // Configure parameter segments visibility
+                paramSection.classList.add('d-none');
+                paramRotate.classList.add('d-none');
+                paramPassword.classList.add('d-none');
+                paramWatermark.classList.add('d-none');
+                paramExtract.classList.add('d-none');
+                paramOrganize.classList.add('d-none');
+                paramEsign.classList.add('d-none');
+
+                if (type === 'rotate_pdf') {
+                    paramSection.classList.remove('d-none');
+                    paramRotate.classList.remove('d-none');
+                } else if (type === 'protect_pdf' || type === 'unlock_pdf') {
+                    paramSection.classList.remove('d-none');
+                    paramPassword.classList.remove('d-none');
+                } else if (type === 'watermark_pdf') {
+                    paramSection.classList.remove('d-none');
+                    paramWatermark.classList.remove('d-none');
+                } else if (type === 'extract_pages') {
+                    paramSection.classList.remove('d-none');
+                    paramExtract.classList.remove('d-none');
+                } else if (type === 'organize_pages') {
+                    paramSection.classList.remove('d-none');
+                    paramOrganize.classList.remove('d-none');
+                } else if (type === 'esign_pdf') {
+                    paramSection.classList.remove('d-none');
+                    paramEsign.classList.remove('d-none');
+                }
+
+                // Adjust dropzone accept guidelines
+                if (type === 'jpg_to_pdf') {
+                    selectedFileText.innerText = 'Drag & Drop images here or click to browse';
+                    acceptText.innerText = 'Supported formats: JPG, JPEG, PNG - Select 1 or more files';
+                    fileInput.setAttribute('accept', '.jpg,.jpeg,.png');
+                } else if (type === 'docx_to_pdf') {
+                    selectedFileText.innerText = 'Drag & Drop Word document here or click to browse';
+                    acceptText.innerText = 'Supported format: Word Document (.docx) - Max 16MB';
+                    fileInput.setAttribute('accept', '.docx');
+                } else {
+                    selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
+                    acceptText.innerText = 'Supported format: PDF (.pdf) - Max 16MB';
+                    fileInput.setAttribute('accept', '.pdf');
+                }
+            });
+        });
+        
+        // Auto-select tool if pre-specified in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const preSelected = urlParams.get('tool');
+        if (preSelected) {
+            const btn = document.querySelector(`.tool-btn[data-type="${preSelected}"]`);
+            if (btn) btn.click();
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center py-5 min-vh-75">
+    <div class="col-md-7">
+        <div class="glass-panel text-center floating-card position-relative p-4" style="border-radius: 16px; border-color: var(--neon-cyan); background: rgba(7, 11, 20, 0.55); box-shadow: 0 0 35px rgba(0, 229, 255, 0.15);">
+            
+            <!-- Corner Brackets -->
+            <div class="position-absolute" style="top: -2px; left: -2px; width: 25px; height: 25px; border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); border-radius: 16px 0 0 0; pointer-events: none;"></div>
+            <div class="position-absolute" style="bottom: -2px; right: -2px; width: 25px; height: 25px; border-bottom: 2px solid var(--neon-purple); border-right: 2px solid var(--neon-purple); border-radius: 0 0 16px 0; pointer-events: none;"></div>
+
+            <div class="stats-orb mb-4 mx-auto" style="width: 80px; height: 80px; font-size: 2rem; border-color: var(--neon-cyan); background: rgba(0, 229, 255, 0.1); box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);">
+                <i class="fa-solid fa-circle-check fa-bounce text-cyan" style="--fa-animation-duration: 2s;"></i>
+            </div>
+            
+            <h3 class="text-white font-monospace text-uppercase mb-2">Transformation Complete</h3>
+            <p class="text-muted small font-monospace mb-4">PAYLOAD PROCESSED SECURELY ON PORTAL GRIDS</p>
+
+            <!-- Mock Fallback Notice Warning -->
+            {% if is_mock %}
+                <div class="alert alert-cyber alert-cyber-danger text-start mb-4 py-2 px-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fa-solid fa-triangle-exclamation text-pink me-2"></i>
+                        <span class="small text-muted">
+                            <strong class="text-pink">SYSTEM FALLBACK NOTICE:</strong> A simulated document payload was generated because the local server does not support specific conversion drivers. Linkages are verified!
+                        </span>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Metadata Metrics -->
+            <div class="row g-3 text-start mb-4 font-monospace">
+                <div class="col-md-6">
+                    <div class="p-3 border border-secondary border-opacity-10 rounded bg-dark bg-opacity-25 h-100">
+                        <div class="text-muted small text-uppercase mb-1">Source Payload</div>
+                        <div class="text-white text-truncate fw-bold small" title="{{ history.input_file.original_filename }}">
+                            {{ history.input_file.original_filename }}
+                        </div>
+                        <div class="text-cyan small mt-1">Size: {{ friendly_input_size }}</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 border border-secondary border-opacity-10 rounded bg-dark bg-opacity-25 h-100">
+                        <div class="text-muted small text-uppercase mb-1">Target Payload</div>
+                        <div class="text-white text-truncate fw-bold small" title="{{ history.output_file.original_filename }}">
+                            {{ history.output_file.original_filename }}
+                        </div>
+                        <div class="text-purple small mt-1">Size: {{ friendly_output_size }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Savings / Speed badges -->
+            <div class="d-flex flex-wrap justify-content-center gap-3 mb-4 font-monospace small">
+                <div class="badge-cyber badge-cyber-success py-2 px-3">
+                    <i class="fa-solid fa-bolt me-1"></i> Speed: {{ history.execution_time }}s
+                </div>
+                {% if history.conversion_type == 'compress_pdf' and size_saving != 'N/A' %}
+                    <div class="badge-cyber badge-cyber-success py-2 px-3">
+                        <i class="fa-solid fa-compress me-1"></i> {{ size_saving }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Retrieval triggers -->
+            <div class="d-grid gap-3">
+                {% if history.output_file %}
+                    <a href="{% url 'converter:download' history.output_file.id %}" class="btn btn-cyber btn-cyber-cyan text-dark fw-bold py-3 fs-5">
+                        <i class="fa-solid fa-download me-2"></i> Download Converted File
+                    </a>
+                {% endif %}
+                
+                <div class="d-flex gap-3">
+                    <a href="{% url 'converter:terminal' %}" class="btn btn-cyber btn-cyber-outline w-100 py-2">
+                        <i class="fa-solid fa-terminal me-1"></i> Convert Another
+                    </a>
+                    <a href="{% url 'converter:dashboard' %}" class="btn btn-cyber btn-cyber-outline w-100 py-2">
+                        <i class="fa-solid fa-gauge-high me-1"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
