@@ -231,47 +231,7 @@ def repair_pdf_engine(input_path, output_path):
         doc.close()
         return True
 
-# 17. OCR Text Extraction (PDF)
-def ocr_pdf_engine(input_path, output_txt_path):
-    doc = fitz.open(input_path)
-    extracted_text = []
-    
-    for page_num in range(len(doc)):
-        page = doc.load_page(page_num)
-        text = page.get_text()
-        
-        if text.strip():
-            extracted_text.append(f"--- Page {page_num + 1} ---\n{text}")
-        else:
-            # Scanned PDF: Render page and use Tesseract if available
-            pix = page.get_pixmap(dpi=150)
-            img = Image.open(BytesIO(pix.tobytes("png")))
-            try:
-                import pytesseract
-                ocr_text = pytesseract.image_to_string(img)
-                extracted_text.append(f"--- Page {page_num + 1} (OCR) ---\n{ocr_text}")
-            except Exception:
-                extracted_text.append(f"--- Page {page_num + 1} ---\n[Scanned Page - Text Extraction Unconfigured]")
-                
-    with open(output_txt_path, 'w', encoding='utf-8') as f:
-        f.write("\n\n".join(extracted_text))
-    doc.close()
-    return True
-
-# 18. Image to Text (OCR)
-def image_to_text_engine(input_path, output_txt_path):
-    img = Image.open(input_path)
-    try:
-        import pytesseract
-        ocr_text = pytesseract.image_to_string(img)
-    except Exception:
-        ocr_text = "[Tesseract OCR binary not found on local path. Check installation configurations]"
-        
-    with open(output_txt_path, 'w', encoding='utf-8') as f:
-        f.write(ocr_text)
-    return True
-
-# 19. eSign PDF Document
+# 17. eSign PDF Document
 def esign_pdf_engine(input_path, output_path, signature_img_path, page_num, x, y, width, height):
     reader = PdfReader(input_path)
     writer = PdfWriter()
