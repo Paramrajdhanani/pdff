@@ -57,9 +57,9 @@ class APIConvertView(BaseApiKeyView):
 
         ext_mapping = {
             'docx_to_pdf': 'pdf', 'pdf_to_docx': 'docx', 'compress_pdf': 'pdf',
-            'merge_pdf': 'pdf', 'split_pdf': 'zip', 'jpg_to_pdf': 'pdf',
-            'pdf_to_jpg': 'zip', 'rotate_pdf': 'pdf', 'unlock_pdf': 'pdf',
-            'protect_pdf': 'pdf', 'watermark_pdf': 'pdf', 'remove_watermark': 'pdf',
+            'merge_pdf': 'pdf', 'jpg_to_pdf': 'pdf',
+            'rotate_pdf': 'pdf', 'unlock_pdf': 'pdf',
+            'watermark_pdf': 'pdf', 'remove_watermark': 'pdf',
             'add_page_numbers': 'pdf', 'extract_pages': 'pdf', 'organize_pages': 'pdf',
             'repair_pdf': 'pdf', 'esign_pdf': 'pdf', 'fill_form': 'pdf'
         }
@@ -88,8 +88,6 @@ class APIConvertView(BaseApiKeyView):
             elif conversion_type == 'jpg_to_pdf':
                 # API accepts single image payload
                 jpg_to_pdf_engine([input_path], output_path)
-            elif conversion_type == 'pdf_to_jpg':
-                pdf_to_jpg_engine(input_path, output_path)
             elif conversion_type == 'rotate_pdf':
                 rotate_pdf_engine(input_path, output_path, 90)
             elif conversion_type == 'repair_pdf':

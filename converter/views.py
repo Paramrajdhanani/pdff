@@ -143,9 +143,9 @@ def convert_file_view(request):
     input_paths = [doc.file.path for doc in input_docs]
     ext_mapping = {
         'docx_to_pdf': 'pdf', 'pdf_to_docx': 'docx', 'compress_pdf': 'pdf',
-        'merge_pdf': 'pdf', 'split_pdf': 'zip', 'jpg_to_pdf': 'pdf',
-        'pdf_to_jpg': 'zip', 'rotate_pdf': 'pdf', 'unlock_pdf': 'pdf',
-        'protect_pdf': 'pdf', 'watermark_pdf': 'pdf', 'remove_watermark': 'pdf',
+        'merge_pdf': 'pdf', 'jpg_to_pdf': 'pdf',
+        'rotate_pdf': 'pdf', 'unlock_pdf': 'pdf',
+        'watermark_pdf': 'pdf', 'remove_watermark': 'pdf',
         'add_page_numbers': 'pdf', 'extract_pages': 'pdf', 'organize_pages': 'pdf',
         'repair_pdf': 'pdf', 'esign_pdf': 'pdf', 'fill_form': 'pdf'
     }
@@ -164,21 +164,14 @@ def convert_file_view(request):
             compress_pdf_engine(input_paths[0], output_path)
         elif conversion_type == 'merge_pdf':
             merge_pdfs_engine(input_paths, output_path)
-        elif conversion_type == 'split_pdf':
-            split_pdf_engine(input_paths[0], output_path)
         elif conversion_type == 'jpg_to_pdf':
             jpg_to_pdf_engine(input_paths, output_path)
-        elif conversion_type == 'pdf_to_jpg':
-            pdf_to_jpg_engine(input_paths[0], output_path)
         elif conversion_type == 'rotate_pdf':
             angle = int(request.POST.get('rotate_angle', 90))
             rotate_pdf_engine(input_paths[0], output_path, angle)
         elif conversion_type == 'unlock_pdf':
             pwd = request.POST.get('password', '')
             unlock_pdf_engine(input_paths[0], output_path, pwd)
-        elif conversion_type == 'protect_pdf':
-            pwd = request.POST.get('password', '')
-            protect_pdf_engine(input_paths[0], output_path, pwd)
         elif conversion_type == 'watermark_pdf':
             text = request.POST.get('watermark_text', 'CONFIDENTIAL')
             watermark_pdf_engine(input_paths[0], output_path, text)

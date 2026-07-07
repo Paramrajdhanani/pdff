@@ -46,25 +46,8 @@ def merge_pdfs_engine(input_paths, output_path):
     writer.close()
     return True
 
-# 5. Split PDF
-def split_pdf_engine(input_path, output_zip_path):
-    reader = PdfReader(input_path)
-    base_name = os.path.splitext(os.path.basename(input_path))[0]
-    
-    with zipfile.ZipFile(output_zip_path, 'w') as zip_file:
-        for idx, page in enumerate(reader.pages):
-            writer = PdfWriter()
-            writer.add_page(page)
-            
-            page_pdf_buffer = BytesIO()
-            writer.write(page_pdf_buffer)
-            page_pdf_buffer.seek(0)
-            
-            filename = f"{base_name}_page_{idx + 1}.pdf"
-            zip_file.writestr(filename, page_pdf_buffer.getvalue())
-    return True
 
-# 6. JPG to PDF
+# 5. JPG to PDF
 def jpg_to_pdf_engine(input_paths, output_path):
     images = []
     for path in input_paths:
@@ -78,23 +61,8 @@ def jpg_to_pdf_engine(input_paths, output_path):
         return True
     return False
 
-# 7. PDF to JPG
-def pdf_to_jpg_engine(input_path, output_zip_path):
-    doc = fitz.open(input_path)
-    base_name = os.path.splitext(os.path.basename(input_path))[0]
-    
-    with zipfile.ZipFile(output_zip_path, 'w') as zip_file:
-        for page_num in range(len(doc)):
-            page = doc.load_page(page_num)
-            pix = page.get_pixmap(dpi=150)
-            img_data = pix.tobytes("jpg")
-            
-            filename = f"{base_name}_page_{page_num + 1}.jpg"
-            zip_file.writestr(filename, img_data)
-    doc.close()
-    return True
 
-# 8. Rotate PDF
+# 6. Rotate PDF
 def rotate_pdf_engine(input_path, output_path, angle):
     reader = PdfReader(input_path)
     writer = PdfWriter()
@@ -120,18 +88,8 @@ def unlock_pdf_engine(input_path, output_path, password):
         writer.write(f)
     return True
 
-# 10. Protect PDF
-def protect_pdf_engine(input_path, output_path, password):
-    reader = PdfReader(input_path)
-    writer = PdfWriter()
-    for page in reader.pages:
-        writer.add_page(page)
-    writer.encrypt(user_password=password, owner_password=None, use_128bit=True)
-    with open(output_path, 'wb') as f:
-        writer.write(f)
-    return True
 
-# 11. Watermark PDF
+# 8. Watermark PDF
 def watermark_pdf_engine(input_path, output_path, watermark_text):
     # Create watermark overlay PDF in-memory
     overlay_buffer = BytesIO()

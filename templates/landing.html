@@ -3,12 +3,7 @@
 
 {% block content %}
 <div class="row align-items-center justify-content-center py-5 min-vh-75 position-relative overflow-hidden">
-    <!-- Floating Shape Orbs inside Hero -->
-    <div class="anti-gravity-shape shape-1" style="top: 10%; right: 40%;"></div>
-    <div class="anti-gravity-shape shape-2" style="bottom: 20%; left: 10%;"></div>
 
-    <!-- WebGL Canvas for Three.js 3D revolving backdrop -->
-    <div id="threejs-hero-container" class="position-absolute w-100 h-100 start-0 top-0" style="z-index: 1; opacity: 0.35; pointer-events: none;"></div>
 
     <div class="col-lg-6 text-center text-lg-start mb-5 mb-lg-0" style="z-index: 2; position: relative;">
         <div class="badge bg-dark border border-cyan text-info font-monospace py-2 px-3 mb-4 rounded-pill">
@@ -144,11 +139,6 @@
             <h5 class="toolkit-card-title">JPG to PDF</h5>
             <p class="toolkit-card-desc">Pack various raster images into high-res page lists.</p>
         </a>
-        <a href="{% url 'converter:terminal' %}?tool=pdf_to_jpg" class="toolkit-launchpad-card">
-            <div class="toolkit-card-icon" style="color: var(--neon-cyan);"><i class="fa-solid fa-images"></i></div>
-            <h5 class="toolkit-card-title">PDF to JPG</h5>
-            <p class="toolkit-card-desc">Render page structures into packed zip archives.</p>
-        </a>
     </div>
 
     <!-- Category 2: Advanced PDF Operations -->
@@ -164,20 +154,10 @@
             <h5 class="toolkit-card-title">Compress PDF</h5>
             <p class="toolkit-card-desc">Optimize layout object streams to shrink size.</p>
         </a>
-        <a href="{% url 'converter:terminal' %}?tool=split_pdf" class="toolkit-launchpad-card">
-            <div class="toolkit-card-icon" style="color: var(--neon-pink);"><i class="fa-solid fa-scissors"></i></div>
-            <h5 class="toolkit-card-title">Split PDF</h5>
-            <p class="toolkit-card-desc">Extract document pages into a zipped archive.</p>
-        </a>
         <a href="{% url 'converter:terminal' %}?tool=rotate_pdf" class="toolkit-launchpad-card">
             <div class="toolkit-card-icon" style="color: var(--neon-cyan);"><i class="fa-solid fa-arrows-rotate"></i></div>
             <h5 class="toolkit-card-title">Rotate PDF</h5>
             <p class="toolkit-card-desc">Rotate page geometries (90/180/270 degrees).</p>
-        </a>
-        <a href="{% url 'converter:terminal' %}?tool=protect_pdf" class="toolkit-launchpad-card">
-            <div class="toolkit-card-icon" style="color: var(--neon-purple);"><i class="fa-solid fa-lock"></i></div>
-            <h5 class="toolkit-card-title">Protect PDF</h5>
-            <p class="toolkit-card-desc">Secure PDF layers with robust password protection.</p>
         </a>
         <a href="{% url 'converter:terminal' %}?tool=unlock_pdf" class="toolkit-launchpad-card">
             <div class="toolkit-card-icon" style="color: var(--neon-pink);"><i class="fa-solid fa-lock-open"></i></div>
@@ -301,84 +281,4 @@
 </script>
 {% endblock %}
 
-{% block extra_js %}
-<script>
-    // 3D revolving loop background effect on Hero section via Three.js
-    const container = document.getElementById('threejs-hero-container');
-    if (container) {
-        const width = container.clientWidth;
-        const height = container.clientHeight;
-        
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        
-        renderer.setSize(width, height);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        container.appendChild(renderer.domElement);
-        
-        // Add futuristic digital ring ring geometry
-        const geometry = new THREE.TorusGeometry(8, 0.15, 16, 100);
-        const material = new THREE.MeshBasicMaterial({ 
-            color: 0x8B5CF6, 
-            wireframe: true 
-        });
-        const torus = new THREE.Mesh(geometry, material);
-        scene.add(torus);
-        
-        // Dynamic constellation point particles inside ring
-        const particlesGeom = new THREE.BufferGeometry();
-        const count = 300;
-        const positions = new Float32Array(count * 3);
-        
-        for(let i=0; i<count*3; i+=3) {
-            positions[i] = (Math.random() - 0.5) * 22;
-            positions[i+1] = (Math.random() - 0.5) * 22;
-            positions[i+2] = (Math.random() - 0.5) * 15;
-        }
-        
-        particlesGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const particlesMat = new THREE.PointsMaterial({ 
-            size: 0.08, 
-            color: 0x00E5FF 
-        });
-        const particles = new THREE.Points(particlesGeom, particlesMat);
-        scene.add(particles);
-        
-        camera.position.z = 15;
-        
-        // Mouse reaction logic
-        let mouseX = 0, mouseY = 0;
-        document.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth - 0.5) * 4;
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 4;
-        });
 
-        const animate = function () {
-            requestAnimationFrame(animate);
-            
-            torus.rotation.x += 0.003;
-            torus.rotation.y += 0.005;
-            
-            particles.rotation.y -= 0.002;
-            
-            // Smooth mouse follow physics
-            torus.rotation.y += (mouseX - torus.rotation.y) * 0.05;
-            torus.rotation.x += (mouseY - torus.rotation.x) * 0.05;
-            
-            renderer.render(scene, camera);
-        };
-        
-        animate();
-        
-        // Handle window resizing
-        window.addEventListener('resize', () => {
-            const w = container.clientWidth;
-            const h = container.clientHeight;
-            camera.aspect = w / h;
-            camera.updateProjectionMatrix();
-            renderer.setSize(w, h);
-        });
-    }
-</script>
-{% endblock %}

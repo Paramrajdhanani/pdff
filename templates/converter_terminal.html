@@ -21,9 +21,6 @@
                     <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="jpg_to_pdf" data-desc="Pack various raster formats (JPG/PNG) into single page overlays.">
                         <i class="fa-solid fa-file-image text-warning me-2"></i> JPG to PDF
                     </button>
-                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="pdf_to_jpg" data-desc="Rasterize PDF vector layers and package pages inside compressed ZIPs.">
-                        <i class="fa-solid fa-images text-cyan me-2"></i> PDF to JPG
-                    </button>
                 </div>
             </div>
 
@@ -37,14 +34,8 @@
                     <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="compress_pdf" data-desc="Re-code stream weights to compress total file sizes.">
                         <i class="fa-solid fa-compress text-cyan me-2"></i> Compress PDF
                     </button>
-                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="split_pdf" data-desc="Disassemble page arrays into isolated individual files inside a ZIP.">
-                        <i class="fa-solid fa-scissors text-danger me-2"></i> Split PDF
-                    </button>
                     <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="rotate_pdf" data-desc="Re-orient page layout grids (90/180/270 degrees clockwise).">
                         <i class="fa-solid fa-arrows-rotate text-success me-2"></i> Rotate PDF
-                    </button>
-                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="protect_pdf" data-desc="Lock PDF read and metadata access with strong user pass-keys.">
-                        <i class="fa-solid fa-lock text-warning me-2"></i> Protect PDF
                     </button>
                     <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="unlock_pdf" data-desc="Strip user lock layers from decrypted PDF archives.">
                         <i class="fa-solid fa-lock-open text-info me-2"></i> Unlock PDF
@@ -256,7 +247,7 @@
                 if (type === 'rotate_pdf') {
                     paramSection.classList.remove('d-none');
                     paramRotate.classList.remove('d-none');
-                } else if (type === 'protect_pdf' || type === 'unlock_pdf') {
+                } else if (type === 'unlock_pdf') {
                     paramSection.classList.remove('d-none');
                     paramPassword.classList.remove('d-none');
                 } else if (type === 'watermark_pdf') {
