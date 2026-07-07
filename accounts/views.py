@@ -23,18 +23,6 @@ def profile_view(request):
         if "generate_key" in request.POST:
             profile.generate_api_key()
             messages.success(request, "API Token generated successfully! Engage portal operations.")
-        elif "change_plan" in request.POST:
-            tier = request.POST.get("plan_tier", "FREE")
-            profile.plan_tier = tier
-            # Adjust storage limits based on tier
-            if tier == "PREMIUM":
-                profile.storage_limit = 5368709120  # 5GB
-            elif tier == "ENTERPRISE":
-                profile.storage_limit = 53687091200 # 50GB
-            else:
-                profile.storage_limit = 524288000   # 500MB
-            profile.save()
-            messages.success(request, f"Identity upgraded to {tier} tier. Quotas refitted.")
         return redirect('accounts:profile')
 
     context = {

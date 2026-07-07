@@ -95,8 +95,8 @@ def convert_file_view(request):
         created_at__gte=today_start
     ).count()
     
-    if profile.plan_tier == 'FREE' and daily_count >= 3:
-        return JsonResponse({'success': False, 'message': 'Daily conversion limit reached. Upgrade to Premium for infinite bandwidth.'}, status=400)
+    if daily_count >= 5:
+        return JsonResponse({'success': False, 'message': 'Daily conversion limit reached. Accounts are restricted to 5 conversions per day.'}, status=400)
 
     conversion_type = request.POST.get('conversion_type')
     uploaded_files = request.FILES.getlist('file')
