@@ -103,6 +103,15 @@ class APIConvertView(BaseApiKeyView):
             with open(output_path, 'w', encoding='utf-8') as f:
                 f.write(mock_content)
 
+        # Clean up input file physically from disk to save disk space
+        if doc.file and os.path.exists(doc.file.path):
+            try:
+                os.remove(doc.file.path)
+                doc.file.name = ""
+                doc.save()
+            except Exception:
+                pass
+
         # Create output document
         out_size = os.path.getsize(output_path)
         output_doc = Document.objects.create(

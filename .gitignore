@@ -10,6 +10,7 @@ db.sqlite3-journal
 # Media / Uploaded files
 media/
 uploads/
+staticfiles/
 
 # Environments
 .env

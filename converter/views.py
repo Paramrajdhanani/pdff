@@ -183,6 +183,16 @@ def convert_file_view(request):
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(mock_content)
 
+    # Clean up input files physically from disk to minimize disk usage
+    for doc in input_docs:
+        if doc.file and os.path.exists(doc.file.path):
+            try:
+                os.remove(doc.file.path)
+                doc.file.name = ""
+                doc.save()
+            except Exception:
+                pass
+
     # Save output as a Document model
     out_size = os.path.getsize(output_path)
     output_doc = Document.objects.create(
