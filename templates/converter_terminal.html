@@ -78,7 +78,7 @@
                             <i class="fa-solid fa-cloud-arrow-up text-cyan mb-2" id="drop-icon"></i>
                         </div>
                         <h5 class="text-white font-monospace small mb-2" id="selected-file-text">Drag & Drop PDF here or click to browse</h5>
-                        <p class="text-muted small mb-0" id="accept-file-text">Supported format: PDF (.pdf) - Max 300MB</p>
+                        <p class="text-muted small mb-0" id="accept-file-text">Supported format: PDF (.pdf) - Max 200MB</p>
                     </div>
 
                     <!-- Dynamic Parameters Wrapper -->
@@ -195,11 +195,11 @@
                     fileInput.setAttribute('accept', '.jpg,.jpeg,.png');
                 } else if (type === 'docx_to_pdf') {
                     selectedFileText.innerText = 'Drag & Drop Word document here or click to browse';
-                    acceptText.innerText = 'Supported format: Word Document (.docx) - Max 300MB';
+                    acceptText.innerText = 'Supported format: Word Document (.docx) - Max 200MB';
                     fileInput.setAttribute('accept', '.docx');
                 } else {
                     selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
-                    acceptText.innerText = 'Supported format: PDF (.pdf) - Max 300MB';
+                    acceptText.innerText = 'Supported format: PDF (.pdf) - Max 200MB';
                     fileInput.setAttribute('accept', '.pdf');
                 }
             });

@@ -55,7 +55,7 @@
                                 <i class="fa-solid fa-cloud-arrow-up text-cyan mb-2" id="drop-icon" style="font-size: 2.5rem;"></i>
                             </div>
                             <h6 class="text-white font-monospace small mb-2" id="selected-file-text">Drag & Drop Word file here or click to browse</h6>
-                            <p class="text-muted small mb-0" id="accept-file-text" style="font-size: 0.75rem;">Supported format: Word Document (.docx) - Max 300MB</p>
+                            <p class="text-muted small mb-0" id="accept-file-text" style="font-size: 0.75rem;">Supported format: Word Document (.docx) - Max 200MB</p>
                         </div>
 
                         <!-- Parameter Section (for hidden stuff if needed) -->
@@ -100,7 +100,7 @@
                             <i class="fa-solid fa-cloud-arrow-up text-cyan mb-2" style="font-size: 2.8rem;"></i>
                         </div>
                         <h6 class="text-white font-monospace small mb-2">Drag & Drop file here or click to browse</h6>
-                        <p class="text-muted small mb-0" style="font-size: 0.75rem;">Supported formats: DOCX, PDF - Max 300MB</p>
+                        <p class="text-muted small mb-0" style="font-size: 0.75rem;">Supported formats: DOCX, PDF - Max 200MB</p>
                     </div>
 
                     <button class="btn btn-cyber btn-cyber-cyan text-dark fw-bold w-100 py-2" data-bs-toggle="modal" data-bs-target="#authPromptModal" style="font-size: 0.85rem;">
@@ -230,17 +230,17 @@
                     // Update styling based on type
                     if (type === 'docx_to_pdf') {
                         selectedFileText.innerText = 'Drag & Drop Word file here or click to browse';
-                        acceptText.innerText = 'Supported format: Word Document (.docx) - Max 300MB';
+                        acceptText.innerText = 'Supported format: Word Document (.docx) - Max 200MB';
                         submitText.innerText = 'Convert Word to PDF';
                         fileInput.setAttribute('accept', '.docx');
                     } else if (type === 'pdf_to_docx') {
                         selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
-                        acceptText.innerText = 'Supported format: PDF (.pdf) - Max 300MB';
+                        acceptText.innerText = 'Supported format: PDF (.pdf) - Max 200MB';
                         submitText.innerText = 'Convert PDF to Word';
                         fileInput.setAttribute('accept', '.pdf');
                     } else if (type === 'compress_pdf') {
                         selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
-                        acceptText.innerText = 'Supported format: PDF (.pdf) - Max 300MB';
+                        acceptText.innerText = 'Supported format: PDF (.pdf) - Max 200MB';
                         submitText.innerText = 'Compress PDF';
                         fileInput.setAttribute('accept', '.pdf');
                     }

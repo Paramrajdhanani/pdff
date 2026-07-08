@@ -659,15 +659,15 @@ function resetDropzoneLabel(type) {
     // Set labels
     if (type === 'pdf_to_docx') {
         selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
-        acceptText.innerText = 'Supported format: PDF (.pdf) - Max 300MB';
+        acceptText.innerText = 'Supported format: PDF (.pdf) - Max 200MB';
         fileInput.setAttribute('accept', '.pdf');
     } else if (type === 'docx_to_pdf') {
         selectedFileText.innerText = 'Drag & Drop Word file here or click to browse';
-        acceptText.innerText = 'Supported format: Word Document (.docx) - Max 300MB';
+        acceptText.innerText = 'Supported format: Word Document (.docx) - Max 200MB';
         fileInput.setAttribute('accept', '.docx');
     } else if (type === 'compress_pdf') {
         selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
-        acceptText.innerText = 'Supported format: PDF (.pdf) - Max 300MB';
+        acceptText.innerText = 'Supported format: PDF (.pdf) - Max 200MB';
         fileInput.setAttribute('accept', '.pdf');
     } else if (type === 'split_pdf') {
         selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
