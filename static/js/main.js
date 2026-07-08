@@ -539,18 +539,6 @@ function initConversionForm() {
                 showError("File type mismatch. Word Document (.docx) required.");
                 return;
             }
-        } else if (conversionType === 'merge_pdf') {
-            if (files.length < 2) {
-                showError("At least 2 PDF files are required for merging.");
-                return;
-            }
-            for (let i = 0; i < files.length; i++) {
-                const ext = files[i].name.split('.').pop().toLowerCase();
-                if (ext !== 'pdf') {
-                    showError("All selected files must be PDFs for merging.");
-                    return;
-                }
-            }
         } else if (conversionType === 'jpg_to_pdf') {
             if (files.length < 1) {
                 showError("Select at least 1 image file for conversion.");
@@ -575,7 +563,6 @@ function initConversionForm() {
         // Configure spinner titles based on toolkit mode
         let activeSpinnerMsg = 'TRANSLATING DOCUMENT GEOMETRY...';
         if (conversionType === 'docx_to_pdf') activeSpinnerMsg = 'COMPILING PDF STRUCTURE...';
-        else if (conversionType === 'merge_pdf') activeSpinnerMsg = 'MERGING DOCUMENT STREAMS...';
         else if (conversionType === 'compress_pdf') activeSpinnerMsg = 'COMPRESSING STREAM DENSITIES...';
         else if (conversionType === 'split_pdf') activeSpinnerMsg = 'DISASSEMBLING PAGES ARCHIVE...';
         else if (conversionType === 'jpg_to_pdf') activeSpinnerMsg = 'BINDING IMAGES TO PDF GRID...';
@@ -678,10 +665,6 @@ function resetDropzoneLabel(type) {
         selectedFileText.innerText = 'Drag & Drop Word file here or click to browse';
         acceptText.innerText = 'Supported format: Word Document (.docx) - Max 16MB';
         fileInput.setAttribute('accept', '.docx');
-    } else if (type === 'merge_pdf') {
-        selectedFileText.innerText = 'Drag & Drop multiple PDFs here or click to browse';
-        acceptText.innerText = 'Supported format: PDF (.pdf) - Select 2 or more files';
-        fileInput.setAttribute('accept', '.pdf');
     } else if (type === 'compress_pdf') {
         selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
         acceptText.innerText = 'Supported format: PDF (.pdf) - Max 16MB';
@@ -736,7 +719,6 @@ function initConverterTypeSelector() {
             let label = 'Launch Transformation Sequence';
             if (type === 'pdf_to_docx') label = 'Convert PDF to Word';
             else if (type === 'docx_to_pdf') label = 'Convert Word to PDF';
-            else if (type === 'merge_pdf') label = 'Merge PDF Files';
             else if (type === 'compress_pdf') label = 'Compress PDF';
             else if (type === 'split_pdf') label = 'Split PDF Pages';
             else if (type === 'jpg_to_pdf') label = 'Convert Images to PDF';

@@ -143,11 +143,9 @@ def convert_file_view(request):
     input_paths = [doc.file.path for doc in input_docs]
     ext_mapping = {
         'docx_to_pdf': 'pdf', 'pdf_to_docx': 'docx', 'compress_pdf': 'pdf',
-        'merge_pdf': 'pdf', 'jpg_to_pdf': 'pdf',
-        'rotate_pdf': 'pdf', 'unlock_pdf': 'pdf',
+        'jpg_to_pdf': 'pdf', 'unlock_pdf': 'pdf',
         'watermark_pdf': 'pdf', 'remove_watermark': 'pdf',
-        'add_page_numbers': 'pdf', 'extract_pages': 'pdf', 'organize_pages': 'pdf',
-        'repair_pdf': 'pdf', 'esign_pdf': 'pdf', 'fill_form': 'pdf'
+        'add_page_numbers': 'pdf'
     }
     
     out_ext = ext_mapping.get(conversion_type, 'pdf')
@@ -162,13 +160,8 @@ def convert_file_view(request):
             pdf_to_docx_engine(input_paths[0], output_path)
         elif conversion_type == 'compress_pdf':
             compress_pdf_engine(input_paths[0], output_path)
-        elif conversion_type == 'merge_pdf':
-            merge_pdfs_engine(input_paths, output_path)
         elif conversion_type == 'jpg_to_pdf':
             jpg_to_pdf_engine(input_paths, output_path)
-        elif conversion_type == 'rotate_pdf':
-            angle = int(request.POST.get('rotate_angle', 90))
-            rotate_pdf_engine(input_paths[0], output_path, angle)
         elif conversion_type == 'unlock_pdf':
             pwd = request.POST.get('password', '')
             unlock_pdf_engine(input_paths[0], output_path, pwd)
@@ -179,37 +172,6 @@ def convert_file_view(request):
             remove_watermark_engine(input_paths[0], output_path)
         elif conversion_type == 'add_page_numbers':
             add_page_numbers_engine(input_paths[0], output_path)
-        elif conversion_type == 'extract_pages':
-            pages_raw = request.POST.get('extract_pages_list', '1')
-            indices = [int(x.strip()) - 1 for x in pages_raw.split(',') if x.strip().isdigit()]
-            extract_pages_engine(input_paths[0], output_path, indices)
-        elif conversion_type == 'organize_pages':
-            order_raw = request.POST.get('organize_order_list', '1')
-            indices = [int(x.strip()) - 1 for x in order_raw.split(',') if x.strip().isdigit()]
-            organize_pages_engine(input_paths[0], output_path, indices)
-        elif conversion_type == 'repair_pdf':
-            repair_pdf_engine(input_paths[0], output_path)
-        elif conversion_type == 'esign_pdf':
-            sig_file = request.FILES.get('signature_image')
-            if sig_file:
-                # Save signature temp
-                sig_temp = os.path.join(base_dir, f"sig_temp_{history.id}.png")
-                with open(sig_temp, 'wb') as f:
-                    for chunk in sig_file.chunks():
-                        f.write(chunk)
-                esign_pdf_engine(input_paths[0], output_path, sig_temp, 0, 100, 100, 150, 60)
-                try: os.remove(sig_temp)
-                except Exception: pass
-            else:
-                # Fallback directly
-                esign_pdf_engine(input_paths[0], output_path, input_paths[0], 0, 100, 100, 150, 60)
-        elif conversion_type == 'fill_form':
-            # Collect dynamic form field dictionary
-            field_data = {}
-            for key, val in request.POST.items():
-                if key.startswith('form_field_'):
-                    field_data[key.replace('form_field_', '')] = val
-            fill_form_engine(input_paths[0], output_path, field_data)
         else:
             raise ValueError(f"Unknown toolkit target module: {conversion_type}")
 

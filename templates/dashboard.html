@@ -46,7 +46,7 @@
             <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 px-1">
                 <h6 class="text-white font-monospace small text-uppercase mb-2"><i class="fa-solid fa-database text-cyan me-1" style="font-size: 0.8rem;"></i> Volume Storage</h6>
                 <div class="progress bg-dark bg-opacity-50 border border-secondary border-opacity-10 rounded-pill mb-1" style="height: 6px;">
-                    <div class="progress-bar rounded-pill" style="width: {{ storage_percentage }}%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); box-shadow: 0 0 8px var(--neon-cyan);"></div>
+                    <div class="progress-bar rounded-pill" id="storage-progress" style="width: 0%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary)); box-shadow: 0 0 8px var(--accent-primary);"></div>
                 </div>
                 <div class="d-flex justify-content-between font-monospace text-muted" style="font-size: 0.65rem;">
                     <span>{{ friendly_used }} used</span>
@@ -84,25 +84,19 @@
         <div class="glass-panel p-4 mb-4">
             <h5 class="text-white font-monospace text-uppercase mb-3" style="font-size: 0.95rem;"><i class="fa-solid fa-bolt text-cyan me-2"></i> Fast-Track Channels</h5>
             <div class="row g-2">
-                <div class="col-6 col-sm-4 col-md-3">
+                <div class="col-6 col-sm-4">
                     <a href="{% url 'converter:terminal' %}?tool=docx_to_pdf" class="toolkit-launchpad-card p-3 text-center text-decoration-none">
                         <i class="fa-solid fa-file-word fa-lg text-primary mb-2"></i>
                         <div class="small text-white font-monospace" style="font-size: 0.75rem;">Word to PDF</div>
                     </a>
                 </div>
-                <div class="col-6 col-sm-4 col-md-3">
+                <div class="col-6 col-sm-4">
                     <a href="{% url 'converter:terminal' %}?tool=pdf_to_docx" class="toolkit-launchpad-card p-3 text-center text-decoration-none">
                         <i class="fa-solid fa-file-pdf fa-lg text-danger mb-2"></i>
                         <div class="small text-white font-monospace" style="font-size: 0.75rem;">PDF to Word</div>
                     </a>
                 </div>
-                <div class="col-6 col-sm-4 col-md-3">
-                    <a href="{% url 'converter:terminal' %}?tool=merge_pdf" class="toolkit-launchpad-card p-3 text-center text-decoration-none">
-                        <i class="fa-solid fa-object-group fa-lg text-purple mb-2"></i>
-                        <div class="small text-white font-monospace" style="font-size: 0.75rem;">Merge PDF</div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3">
+                <div class="col-6 col-sm-4">
                     <a href="{% url 'converter:terminal' %}?tool=compress_pdf" class="toolkit-launchpad-card p-3 text-center text-decoration-none">
                         <i class="fa-solid fa-compress fa-lg text-cyan mb-2"></i>
                         <div class="small text-white font-monospace" style="font-size: 0.75rem;">Compress PDF</div>
@@ -200,6 +194,13 @@
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const storageBar = document.getElementById('storage-progress');
+        if (storageBar) {
+            storageBar.style.width = "{{ storage_percentage }}%";
+        }
+    });
+
     function dismissNotification(button) {
         const noteId = button.getAttribute('data-id');
         fetch(`/clear-notification/${noteId}/`, {

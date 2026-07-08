@@ -57,11 +57,9 @@ class APIConvertView(BaseApiKeyView):
 
         ext_mapping = {
             'docx_to_pdf': 'pdf', 'pdf_to_docx': 'docx', 'compress_pdf': 'pdf',
-            'merge_pdf': 'pdf', 'jpg_to_pdf': 'pdf',
-            'rotate_pdf': 'pdf', 'unlock_pdf': 'pdf',
+            'jpg_to_pdf': 'pdf', 'unlock_pdf': 'pdf',
             'watermark_pdf': 'pdf', 'remove_watermark': 'pdf',
-            'add_page_numbers': 'pdf', 'extract_pages': 'pdf', 'organize_pages': 'pdf',
-            'repair_pdf': 'pdf', 'esign_pdf': 'pdf', 'fill_form': 'pdf'
+            'add_page_numbers': 'pdf'
         }
 
         if conversion_type not in ext_mapping:
@@ -88,13 +86,16 @@ class APIConvertView(BaseApiKeyView):
             elif conversion_type == 'jpg_to_pdf':
                 # API accepts single image payload
                 jpg_to_pdf_engine([input_path], output_path)
-            elif conversion_type == 'rotate_pdf':
-                rotate_pdf_engine(input_path, output_path, 90)
-            elif conversion_type == 'repair_pdf':
-                repair_pdf_engine(input_path, output_path)
+            elif conversion_type == 'unlock_pdf':
+                unlock_pdf_engine(input_path, output_path, '')
+            elif conversion_type == 'watermark_pdf':
+                watermark_pdf_engine(input_path, output_path, 'CONFIDENTIAL')
+            elif conversion_type == 'remove_watermark':
+                remove_watermark_engine(input_path, output_path)
+            elif conversion_type == 'add_page_numbers':
+                add_page_numbers_engine(input_path, output_path)
             else:
-                # Other complex form/signature tools fall back to clean repair for API
-                repair_pdf_engine(input_path, output_path)
+                raise ValueError(f"Unknown toolkit target module: {conversion_type}")
 
         except Exception as e:
             is_mock = True
