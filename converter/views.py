@@ -104,10 +104,10 @@ def convert_file_view(request):
     if not uploaded_files:
         return JsonResponse({'success': False, 'message': 'Please upload at least one valid file.'}, status=400)
 
-    # Size validations (limit of 16MB)
+    # Size validations (limit of 300MB)
     for f in uploaded_files:
-        if f.size > 16777216:
-            return JsonResponse({'success': False, 'message': f'File {f.name} exceeds standard 16MB payload limits.'}, status=400)
+        if f.size > 314572800:
+            return JsonResponse({'success': False, 'message': f'File {f.name} exceeds standard 300MB payload limits.'}, status=400)
 
     # Save inputs as Document models
     input_docs = []

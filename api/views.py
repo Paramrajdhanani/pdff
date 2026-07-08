@@ -37,8 +37,8 @@ class APIConvertView(BaseApiKeyView):
             return Response({'error': 'Missing conversion_type or file parameter.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Enforce size limits
-        if uploaded_file.size > 16777216:
-            return Response({'error': 'File payload exceeds standard 16MB limits.'}, status=status.HTTP_400_BAD_REQUEST)
+        if uploaded_file.size > 314572800:
+            return Response({'error': 'File payload exceeds standard 300MB limits.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Save input document
         doc = Document.objects.create(

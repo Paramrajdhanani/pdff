@@ -119,3 +119,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
+# Max Upload Size Config (300MB)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 314572800
+FILE_UPLOAD_MAX_MEMORY_SIZE = 314572800
+
