@@ -154,6 +154,11 @@
             <h5 class="toolkit-card-title">Unlock PDF</h5>
             <p class="toolkit-card-desc">Remove passwords from unlocked files.</p>
         </a>
+        <a href="{% url 'converter:terminal' %}?tool=lock_pdf" class="toolkit-launchpad-card">
+            <div class="toolkit-card-icon" style="color: var(--neon-pink);"><i class="fa-solid fa-lock"></i></div>
+            <h5 class="toolkit-card-title">Lock PDF</h5>
+            <p class="toolkit-card-desc">Encrypt document payload using customized key passwords.</p>
+        </a>
         <a href="{% url 'converter:terminal' %}?tool=watermark_pdf" class="toolkit-launchpad-card">
             <div class="toolkit-card-icon" style="color: var(--neon-cyan);"><i class="fa-solid fa-pen-nib"></i></div>
             <h5 class="toolkit-card-title">Watermark PDF</h5>

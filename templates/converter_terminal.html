@@ -34,6 +34,9 @@
                     <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="unlock_pdf" data-desc="Strip user lock layers from decrypted PDF archives.">
                         <i class="fa-solid fa-lock-open text-info me-2"></i> Unlock PDF
                     </button>
+                    <button class="list-group-item list-group-item-action bg-transparent border-0 text-muted font-monospace py-2 px-3 tool-btn" data-type="lock_pdf" data-desc="Encrypt document payload using customized key passwords.">
+                        <i class="fa-solid fa-lock text-danger me-2"></i> Lock PDF
+                    </button>
                 </div>
             </div>
 
@@ -180,7 +183,7 @@
                 paramPassword.classList.add('d-none');
                 paramWatermark.classList.add('d-none');
 
-                if (type === 'unlock_pdf') {
+                if (type === 'unlock_pdf' || type === 'lock_pdf') {
                     paramSection.classList.remove('d-none');
                     paramPassword.classList.remove('d-none');
                 } else if (type === 'watermark_pdf') {

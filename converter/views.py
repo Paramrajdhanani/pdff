@@ -143,7 +143,7 @@ def convert_file_view(request):
     input_paths = [doc.file.path for doc in input_docs]
     ext_mapping = {
         'docx_to_pdf': 'pdf', 'pdf_to_docx': 'docx', 'compress_pdf': 'pdf',
-        'jpg_to_pdf': 'pdf', 'unlock_pdf': 'pdf',
+        'jpg_to_pdf': 'pdf', 'unlock_pdf': 'pdf', 'lock_pdf': 'pdf',
         'watermark_pdf': 'pdf', 'remove_watermark': 'pdf',
         'add_page_numbers': 'pdf'
     }
@@ -165,6 +165,9 @@ def convert_file_view(request):
         elif conversion_type == 'unlock_pdf':
             pwd = request.POST.get('password', '')
             unlock_pdf_engine(input_paths[0], output_path, pwd)
+        elif conversion_type == 'lock_pdf':
+            pwd = request.POST.get('password', '')
+            lock_pdf_engine(input_paths[0], output_path, pwd)
         elif conversion_type == 'watermark_pdf':
             text = request.POST.get('watermark_text', 'CONFIDENTIAL')
             watermark_pdf_engine(input_paths[0], output_path, text)

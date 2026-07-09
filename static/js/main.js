@@ -519,7 +519,7 @@ function initConversionForm() {
         const conversionType = document.getElementById('conversion-type').value;
 
         // Validation based on tool type
-        if (conversionType in {'pdf_to_docx': 1, 'compress_pdf': 1, 'split_pdf': 1, 'pdf_to_jpg': 1}) {
+        if (conversionType in {'pdf_to_docx': 1, 'compress_pdf': 1, 'split_pdf': 1, 'pdf_to_jpg': 1, 'unlock_pdf': 1, 'lock_pdf': 1}) {
             if (files.length !== 1) {
                 showError("Exactly 1 PDF file is required for this operation.");
                 return;
@@ -567,6 +567,8 @@ function initConversionForm() {
         else if (conversionType === 'split_pdf') activeSpinnerMsg = 'DISASSEMBLING PAGES ARCHIVE...';
         else if (conversionType === 'jpg_to_pdf') activeSpinnerMsg = 'BINDING IMAGES TO PDF GRID...';
         else if (conversionType === 'pdf_to_jpg') activeSpinnerMsg = 'RENDERING PAGES TO JPG IMAGES...';
+        else if (conversionType === 'unlock_pdf') activeSpinnerMsg = 'DECRYPTING PDF DOCUMENT...';
+        else if (conversionType === 'lock_pdf') activeSpinnerMsg = 'ENCRYPTING PDF DOCUMENT...';
 
         if (spinnerTitle) spinnerTitle.innerText = activeSpinnerMsg;
 
@@ -669,6 +671,10 @@ function resetDropzoneLabel(type) {
         selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
         acceptText.innerText = 'Supported format: PDF (.pdf) - Max 200MB';
         fileInput.setAttribute('accept', '.pdf');
+    } else if (type === 'unlock_pdf' || type === 'lock_pdf') {
+        selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
+        acceptText.innerText = 'Supported format: PDF (.pdf) - Max 200MB';
+        fileInput.setAttribute('accept', '.pdf');
     } else if (type === 'split_pdf') {
         selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
         acceptText.innerText = 'Supported format: PDF (.pdf) - Will extract all pages as a ZIP';
@@ -723,6 +729,8 @@ function initConverterTypeSelector() {
             else if (type === 'split_pdf') label = 'Split PDF Pages';
             else if (type === 'jpg_to_pdf') label = 'Convert Images to PDF';
             else if (type === 'pdf_to_jpg') label = 'Convert PDF to Images';
+            else if (type === 'unlock_pdf') label = 'Unlock PDF';
+            else if (type === 'lock_pdf') label = 'Lock PDF';
             submitBtnText.innerText = label;
         }
     }

@@ -57,7 +57,7 @@ class APIConvertView(BaseApiKeyView):
 
         ext_mapping = {
             'docx_to_pdf': 'pdf', 'pdf_to_docx': 'docx', 'compress_pdf': 'pdf',
-            'jpg_to_pdf': 'pdf', 'unlock_pdf': 'pdf',
+            'jpg_to_pdf': 'pdf', 'unlock_pdf': 'pdf', 'lock_pdf': 'pdf',
             'watermark_pdf': 'pdf', 'remove_watermark': 'pdf',
             'add_page_numbers': 'pdf'
         }
@@ -88,6 +88,8 @@ class APIConvertView(BaseApiKeyView):
                 jpg_to_pdf_engine([input_path], output_path)
             elif conversion_type == 'unlock_pdf':
                 unlock_pdf_engine(input_path, output_path, '')
+            elif conversion_type == 'lock_pdf':
+                lock_pdf_engine(input_path, output_path, '')
             elif conversion_type == 'watermark_pdf':
                 watermark_pdf_engine(input_path, output_path, 'CONFIDENTIAL')
             elif conversion_type == 'remove_watermark':

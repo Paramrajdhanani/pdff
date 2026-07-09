@@ -89,6 +89,22 @@ def unlock_pdf_engine(input_path, output_path, password):
     return True
 
 
+# 10. Lock PDF
+def lock_pdf_engine(input_path, output_path, password):
+    if not password:
+        raise ValueError("Password cannot be empty.")
+    reader = PdfReader(input_path)
+    writer = PdfWriter()
+    for page in reader.pages:
+        writer.add_page(page)
+    writer.encrypt(password)
+    with open(output_path, 'wb') as f:
+        writer.write(f)
+    return True
+
+
+
+
 # 8. Watermark PDF
 def watermark_pdf_engine(input_path, output_path, watermark_text):
     # Create watermark overlay PDF in-memory
