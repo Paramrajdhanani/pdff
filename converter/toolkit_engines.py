@@ -132,16 +132,30 @@ def watermark_pdf_engine(input_path, output_path, watermark_text):
     return True
 
 # 12. Remove Watermark (Approximated stream cleanup)
-def remove_watermark_engine(input_path, output_path):
-    # True programmatic watermark removal can be highly complex because watermarks are nested objects.
-    # We clean text arrays or streams, or recreate the PDF content streams without common overlay paths.
-    reader = PdfReader(input_path)
-    writer = PdfWriter()
-    # Simple strategy: save clean structures or copy content without secondary overlays
-    for page in reader.pages:
-        writer.add_page(page)
-    with open(output_path, 'wb') as f:
-        writer.write(f)
+def remove_watermark_engine(input_path, output_path, watermark_text=None):
+    doc = fitz.open(input_path)
+    keywords = ["CONFIDENTIAL", "DRAFT", "WATERMARK", "SAMPLE", "COPY", "DO NOT COPY", "PREVIEW"]
+    if watermark_text:
+        watermark_text = watermark_text.strip()
+        if watermark_text and watermark_text not in keywords:
+            keywords.append(watermark_text)
+
+    for page in doc:
+        # Delete annotations of subtype Watermark
+        if page.annots():
+            for annot in list(page.annots()):
+                if annot.type[1] == 'Watermark':
+                    page.delete_annot(annot)
+
+        # Redact matching text using white fill color
+        for kw in keywords:
+            text_instances = page.search_for(kw)
+            for inst in text_instances:
+                page.add_redact_annot(inst, fill=(1, 1, 1))
+            page.apply_redactions()
+
+    doc.save(output_path, garbage=3, deflate=True)
+    doc.close()
     return True
 
 # 13. Add Page Numbers

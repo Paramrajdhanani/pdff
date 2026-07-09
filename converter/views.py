@@ -172,7 +172,8 @@ def convert_file_view(request):
             text = request.POST.get('watermark_text', 'CONFIDENTIAL')
             watermark_pdf_engine(input_paths[0], output_path, text)
         elif conversion_type == 'remove_watermark':
-            remove_watermark_engine(input_paths[0], output_path)
+            text = request.POST.get('watermark_text', '')
+            remove_watermark_engine(input_paths[0], output_path, text)
         elif conversion_type == 'add_page_numbers':
             add_page_numbers_engine(input_paths[0], output_path)
         else:

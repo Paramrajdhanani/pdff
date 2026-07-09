@@ -186,9 +186,21 @@
                 if (type === 'unlock_pdf' || type === 'lock_pdf') {
                     paramSection.classList.remove('d-none');
                     paramPassword.classList.remove('d-none');
-                } else if (type === 'watermark_pdf') {
+                } else if (type === 'watermark_pdf' || type === 'remove_watermark') {
                     paramSection.classList.remove('d-none');
                     paramWatermark.classList.remove('d-none');
+                    
+                    const label = paramWatermark.querySelector('label');
+                    const input = paramWatermark.querySelector('input');
+                    if (type === 'watermark_pdf') {
+                        label.innerText = 'Stamp Text';
+                        input.placeholder = 'CONFIDENTIAL';
+                        input.value = 'CONFIDENTIAL';
+                    } else {
+                        label.innerText = 'Watermark Text to Search & Remove (Optional)';
+                        input.placeholder = 'e.g., CONFIDENTIAL';
+                        input.value = '';
+                    }
                 }
 
                 // Adjust dropzone accept guidelines

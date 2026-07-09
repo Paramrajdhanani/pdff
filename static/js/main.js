@@ -519,7 +519,7 @@ function initConversionForm() {
         const conversionType = document.getElementById('conversion-type').value;
 
         // Validation based on tool type
-        if (conversionType in {'pdf_to_docx': 1, 'compress_pdf': 1, 'split_pdf': 1, 'pdf_to_jpg': 1, 'unlock_pdf': 1, 'lock_pdf': 1}) {
+        if (conversionType in {'pdf_to_docx': 1, 'compress_pdf': 1, 'split_pdf': 1, 'pdf_to_jpg': 1, 'unlock_pdf': 1, 'lock_pdf': 1, 'watermark_pdf': 1, 'remove_watermark': 1, 'add_page_numbers': 1}) {
             if (files.length !== 1) {
                 showError("Exactly 1 PDF file is required for this operation.");
                 return;
@@ -671,7 +671,7 @@ function resetDropzoneLabel(type) {
         selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
         acceptText.innerText = 'Supported format: PDF (.pdf) - Max 200MB';
         fileInput.setAttribute('accept', '.pdf');
-    } else if (type === 'unlock_pdf' || type === 'lock_pdf') {
+    } else if (type === 'unlock_pdf' || type === 'lock_pdf' || type === 'watermark_pdf' || type === 'remove_watermark' || type === 'add_page_numbers') {
         selectedFileText.innerText = 'Drag & Drop PDF here or click to browse';
         acceptText.innerText = 'Supported format: PDF (.pdf) - Max 200MB';
         fileInput.setAttribute('accept', '.pdf');
@@ -731,6 +731,9 @@ function initConverterTypeSelector() {
             else if (type === 'pdf_to_jpg') label = 'Convert PDF to Images';
             else if (type === 'unlock_pdf') label = 'Unlock PDF';
             else if (type === 'lock_pdf') label = 'Lock PDF';
+            else if (type === 'watermark_pdf') label = 'Watermark PDF';
+            else if (type === 'remove_watermark') label = 'Remove Watermark';
+            else if (type === 'add_page_numbers') label = 'Add Page Numbers';
             submitBtnText.innerText = label;
         }
     }
